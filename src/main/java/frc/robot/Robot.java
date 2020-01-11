@@ -7,20 +7,20 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import java.lang.Runnable;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-//import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.*;
-
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.can.*;
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.command.*;
 
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically
@@ -60,7 +60,14 @@ public class Robot extends TimedRobot {
     r1Talon = new WPI_TalonSRX(3);
     r2Talon = new WPI_TalonSRX(4);
 
-    aButton = new JoystickButton(myController,0);
+    aButton = new JoystickButton(myController,0); //servo button
+    servo = new Servo(0);
+
+    ServoSpin ss = new ServoSpin(servo);
+
+    aButton.whenPressed(new InstantCommand(ss));
+
+
     bButton = new JoystickButton(myController,1);
     xButton = new JoystickButton(myController,2);
     yButton = new JoystickButton(myController,3);
@@ -71,7 +78,7 @@ public class Robot extends TimedRobot {
     lStickPress = new JoystickButton(myController,8);
     rStickPress = new JoystickButton(myController,9);
 
-    servo = new Servo(0);
+    
 
   }
 
@@ -94,14 +101,19 @@ public class Robot extends TimedRobot {
     r1Talon.set(ControlMode.PercentOutput, rightSpeed);
     r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
-    double angle = servo.getAngle();
-    servo.setAngle(angle + 4.5)
+    
   }
 
-  //make the robot spin 180 degrees once
-  // public void spin() {
-  //   //
-  //   lTalon.set(ControlMode.PercentOutput, .5);
-  //   rTalon.set(ControlMode.PercentOutput, .5);
-  // }
+  private class ServoSpin implements Runnable{
+    Servo servo;
+    public ServoSpin(Servo s){
+      servo = s;
+    }
+
+    public void run(){
+      double angle = servo.getAngle();
+      servo.setAngle(angle + 45);
+    }
+  }
+
 }
