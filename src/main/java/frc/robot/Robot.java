@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
   private JoystickButton startButton;
   private JoystickButton lStickPress;
   private JoystickButton rStickPress;
+  private Servo servo;
 
   @Override
   public void robotInit() {
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot {
     lStickPress = new JoystickButton(myController,8);
     rStickPress = new JoystickButton(myController,9);
 
+    servo = new Servo(0);
+
   }
 
   @Override
@@ -91,6 +94,8 @@ public class Robot extends TimedRobot {
     r1Talon.set(ControlMode.PercentOutput, rightSpeed);
     r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
+    double angle = servo.getAngle();
+    servo.setAngle(angle + 4.5)
   }
 
   //make the robot spin 180 degrees once
