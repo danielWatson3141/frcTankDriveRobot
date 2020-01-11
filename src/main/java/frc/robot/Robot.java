@@ -7,10 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.*;
 
@@ -25,6 +27,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
  * it contains the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
+  private GenericHID myController;
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
@@ -45,6 +48,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
+    myController = new XboxController(0);
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
     m_leftStick = new Joystick(0);
     //m_rightStick = new Joystick(1);
@@ -54,16 +59,16 @@ public class Robot extends TimedRobot {
     r1Talon = new WPI_TalonSRX(3);
     r2Talon = new WPI_TalonSRX(4);
 
-    // aButton = new JoystickButton(0);
-    // bButton = new JoystickButton(1);
-    // xButton = new JoystickButton(2);
-    // yButton = new JoystickButton(3);
-    // lBumper = new JoystickButton(4);
-    // rBumper = new JoystickButton(5);
-    // backButton = new JoystickButton(6);
-    // startButton = new JoystickButton(7);
-    // lStickPress = new JoystickButton(8);
-    // rStickPress = new JoystickButton(9);
+    aButton = new JoystickButton(myController,0);
+    bButton = new JoystickButton(myController,1);
+    xButton = new JoystickButton(myController,2);
+    yButton = new JoystickButton(myController,3);
+    lBumper = new JoystickButton(myController,4);
+    rBumper = new JoystickButton(myController,5);
+    backButton = new JoystickButton(myController,6);
+    startButton = new JoystickButton(myController,7);
+    lStickPress = new JoystickButton(myController,8);
+    rStickPress = new JoystickButton(myController,9);
 
   }
 
