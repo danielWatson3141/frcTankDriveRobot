@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import java.util.concurrent.atomic.AtomicBoolean; 
+
 import java.lang.Runnable;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -27,6 +29,9 @@ import edu.wpi.first.wpilibj.command.*;
  * it contains the code necessary to operate a robot with tank drive.
  */
 public class Robot extends TimedRobot {
+
+  private AtomicBoolean isSpinning;
+
   private GenericHID myController;
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;
@@ -46,6 +51,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
+    isSpinning = new AtomicBoolean(false);
 
     myController = new XboxController(0);
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
@@ -79,15 +86,17 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    double leftSpeed;
-    double rightSpeed;
+    if(! isSpinning.get()){
+        double leftSpeed;
+        double rightSpeed;
 
-    leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
-    rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
+        leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
+        rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
 
-    lTalon.set(ControlMode.PercentOutput, leftSpeed );
+        lTalon.set(ControlMode.PercentOutput, leftSpeed );
 
-    rTalon.set(ControlMode.PercentOutput, rightSpeed);
+        rTalon.set(ControlMode.PercentOutput, rightSpeed);
+    }
     
   }
 
@@ -100,9 +109,12 @@ public class Robot extends TimedRobot {
     }
 
     public void run(){
-        me.lTalon.set(ControlMode.PercentOutput, .5 );
+        me.isSpinning.set(true);
 
+        me.lTalon.set(ControlMode.PercentOutput, .5 );
         me.rTalon.set(ControlMode.PercentOutput, .5 );
+        Thread.sleep(1000);
+        me.isSpinning.set(false);
     }
   }
 
