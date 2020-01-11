@@ -28,8 +28,10 @@ public class Robot extends TimedRobot {
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
-  private TalonSRX lTalon;
-  private TalonSRX rTalon;
+  private TalonSRX l1Talon;
+  private TalonSRX r1Talon;
+  private TalonSRX l2Talon;
+  private TalonSRX r2Talon;
   private JoystickButton aButton;
   private JoystickButton bButton;
   private JoystickButton xButton;
@@ -45,20 +47,23 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
     m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
-    lTalon = new WPI_TalonSRX(3);
-    rTalon = new WPI_TalonSRX(4);
+    //m_rightStick = new Joystick(1);
 
-    aButton = new JoystickButton(0);
-    bButton = new JoystickButton(1);
-    xButton = new JoystickButton(2);
-    yButton = new JoystickButton(3);
-    lBumper = new JoystickButton(4);
-    rBumper = new JoystickButton(5);
-    backButton = new JoystickButton(6);
-    startButton = new JoystickButton(7);
-    lStickPress = new JoystickButton(8);
-    rStickPress = new JoystickButton(9);
+    l1Talon = new WPI_TalonSRX(1);
+    l2Talon = new WPI_TalonSRX(2);
+    r1Talon = new WPI_TalonSRX(3);
+    r2Talon = new WPI_TalonSRX(4);
+
+    // aButton = new JoystickButton(0);
+    // bButton = new JoystickButton(1);
+    // xButton = new JoystickButton(2);
+    // yButton = new JoystickButton(3);
+    // lBumper = new JoystickButton(4);
+    // rBumper = new JoystickButton(5);
+    // backButton = new JoystickButton(6);
+    // startButton = new JoystickButton(7);
+    // lStickPress = new JoystickButton(8);
+    // rStickPress = new JoystickButton(9);
 
   }
 
@@ -66,14 +71,21 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 
-    if(m_leftStck.getRawButtonPressed{
-      //spin();
-    //}else{
-      lTalon.set(ControlMode.PercentOutput, (m_rightStick.getY()+m_rightStick.getX())*.5);
-      rTalon.set(ControlMode.PercentOutput, (-m_rightStick.getY()+m_rightStick.getX())*.5);
-    //}
-    
-    
+    // if(m_leftStck.getRawButtonPressed){
+    // }    
+
+    double leftSpeed;
+    double rightSpeed;
+
+    leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
+    rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
+
+    l1Talon.set(ControlMode.PercentOutput, leftSpeed );
+    l2Talon.set(ControlMode.PercentOutput, leftSpeed );
+
+    r1Talon.set(ControlMode.PercentOutput, rightSpeed);
+    r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+
   }
 
   //make the robot spin 180 degrees once
