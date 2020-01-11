@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.*;
 
 import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -29,7 +30,16 @@ public class Robot extends TimedRobot {
   private Joystick m_rightStick;
   private TalonSRX lTalon;
   private TalonSRX rTalon;
-  private Button xButton;
+  private JoystickButton aButton;
+  private JoystickButton bButton;
+  private JoystickButton xButton;
+  private JoystickButton yButton;
+  private JoystickButton lBumper;
+  private JoystickButton rBumper;
+  private JoystickButton backButton;
+  private JoystickButton startButton;
+  private JoystickButton lStickPress;
+  private JoystickButton rStickPress;
 
   @Override
   public void robotInit() {
@@ -39,7 +49,16 @@ public class Robot extends TimedRobot {
     lTalon = new WPI_TalonSRX(3);
     rTalon = new WPI_TalonSRX(4);
 
-    //xButton = new Button(1);
+    aButton = new JoystickButton(0);
+    bButton = new JoystickButton(1);
+    xButton = new JoystickButton(2);
+    yButton = new JoystickButton(3);
+    lBumper = new JoystickButton(4);
+    rBumper = new JoystickButton(5);
+    backButton = new JoystickButton(6);
+    startButton = new JoystickButton(7);
+    lStickPress = new JoystickButton(8);
+    rStickPress = new JoystickButton(9);
 
   }
 
@@ -47,7 +66,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 
-    //if(xButton.get()){
+    if(m_leftStck.getRawButtonPressed{
       //spin();
     //}else{
       lTalon.set(ControlMode.PercentOutput, (m_rightStick.getY()+m_rightStick.getX())*.5);
