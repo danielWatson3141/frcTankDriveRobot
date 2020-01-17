@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -58,25 +57,7 @@ public class fourWheelRobot extends TimedRobot {
     r1Talon = new WPI_TalonSRX(3);
     r2Talon = new WPI_TalonSRX(4);
 
-    aButton = new JoystickButton(myController,0); //servo button
-    servo = new Servo(0);
-
-    ServoSpin ss = new ServoSpin(servo);
-
-    aButton.whenPressed(new InstantCommand(ss));
-
-
-    bButton = new JoystickButton(myController,1);
-    xButton = new JoystickButton(myController,2);
-    yButton = new JoystickButton(myController,3);
-    lBumper = new JoystickButton(myController,4);
-    rBumper = new JoystickButton(myController,5);
-    backButton = new JoystickButton(myController,6);
-    startButton = new JoystickButton(myController,7);
-    lStickPress = new JoystickButton(myController,8);
-    rStickPress = new JoystickButton(myController,9);
-
-    
+    servo = new Servo(0);   
 
   }
 
@@ -100,18 +81,6 @@ public class fourWheelRobot extends TimedRobot {
     r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
     
-  }
-
-  private class ServoSpin implements Runnable{
-    Servo servo;
-    public ServoSpin(Servo s){
-      servo = s;
-    }
-
-    public void run(){
-      double angle = servo.getAngle();
-      servo.setAngle(angle + 45);
-    }
   }
 
 }

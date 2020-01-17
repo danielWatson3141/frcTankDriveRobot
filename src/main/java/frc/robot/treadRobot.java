@@ -13,11 +13,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
@@ -28,27 +26,16 @@ public class treadRobot extends TimedRobot {
 
   private AtomicBoolean isSpinning;
 
-  private GenericHID myController;
+  private XboxController myController;
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
   private TalonSRX lTalon;
   private TalonSRX rTalon;
-  private JoystickButton aButton;
-  private JoystickButton bButton;
-  private JoystickButton xButton;
-  private JoystickButton yButton;
-  private JoystickButton lBumper;
-  private JoystickButton rBumper;
-  private JoystickButton backButton;
-  private JoystickButton startButton;
-  private JoystickButton lStickPress;
-  private JoystickButton rStickPress;
+  
 
   @Override
   public void robotInit() {
-
-    isSpinning = new AtomicBoolean(false);
 
     myController = new XboxController(0);
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
@@ -57,18 +44,6 @@ public class treadRobot extends TimedRobot {
 
     lTalon = new WPI_TalonSRX(1);
     rTalon = new WPI_TalonSRX(2);
-
-    aButton = new JoystickButton(myController,0); //servo button
-    bButton = new JoystickButton(myController,1);
-    xButton = new JoystickButton(myController,2);
-    yButton = new JoystickButton(myController,3);
-    lBumper = new JoystickButton(myController,4);
-    rBumper = new JoystickButton(myController,5);
-    backButton = new JoystickButton(myController,6);
-    startButton = new JoystickButton(myController,7);
-    lStickPress = new JoystickButton(myController,8);
-    rStickPress = new JoystickButton(myController,9);
-    
 
   }
 
@@ -84,8 +59,9 @@ public class treadRobot extends TimedRobot {
 
     rTalon.set(ControlMode.PercentOutput, rightSpeed);
 
-    if(aButton.get()){
+    if(myController.getAButtonPressed()){
       lTalon.set(ControlMode.PercentOutput, 1);
+      rTalon.set(ControlMode.PercentOutput, 1);
     }
   }
 }
