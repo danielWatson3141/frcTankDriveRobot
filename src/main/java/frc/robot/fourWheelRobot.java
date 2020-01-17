@@ -11,6 +11,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+
+
+
 import java.lang.Runnable;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -26,7 +29,7 @@ import edu.wpi.first.wpilibj.command.*;
  * This is a demo program showing the use of the RobotDrive class, specifically
  * it contains the code necessary to operate a robot with tank drive.
  */
-public class Robot extends TimedRobot {
+public class fourWheelRobot extends TimedRobot {
   private GenericHID myController;
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;

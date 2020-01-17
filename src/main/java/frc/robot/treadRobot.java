@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.command.*;
  * This is a demo program showing the use of the RobotDrive class, specifically
  * it contains the code necessary to operate a robot with tank drive.
  */
-public class Robot extends TimedRobot {
+public class treadRobot extends TimedRobot {
 
   private AtomicBoolean isSpinning;
 
@@ -63,12 +63,6 @@ public class Robot extends TimedRobot {
     rTalon = new WPI_TalonSRX(2);
 
     aButton = new JoystickButton(myController,0); //servo button
-
-    spinOnce ss = new spinOnce(this);
-
-    aButton.whenPressed(new InstantCommand(ss));
-
-
     bButton = new JoystickButton(myController,1);
     xButton = new JoystickButton(myController,2);
     yButton = new JoystickButton(myController,3);
@@ -78,44 +72,24 @@ public class Robot extends TimedRobot {
     startButton = new JoystickButton(myController,7);
     lStickPress = new JoystickButton(myController,8);
     rStickPress = new JoystickButton(myController,9);
-
     
 
   }
 
   @Override
   public void teleopPeriodic() {
+    double leftSpeed;
+    double rightSpeed;
 
-    if(! isSpinning.get()){
-        double leftSpeed;
-        double rightSpeed;
+    leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
+    rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
 
-        leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
-        rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
+    lTalon.set(ControlMode.PercentOutput, leftSpeed );
 
-        lTalon.set(ControlMode.PercentOutput, leftSpeed );
+    rTalon.set(ControlMode.PercentOutput, rightSpeed);
 
-        rTalon.set(ControlMode.PercentOutput, rightSpeed);
-    }
-    
-  }
-
-  private class spinOnce implements Runnable{
-    
-    Robot me;
-
-    public spinOnce(Robot mi){
-        me = mi;
-    }
-
-    public void run(){
-        me.isSpinning.set(true);
-
-        me.lTalon.set(ControlMode.PercentOutput, .5 );
-        me.rTalon.set(ControlMode.PercentOutput, .5 );
-        Thread.sleep(1000);
-        me.isSpinning.set(false);
+    if(aButton.get()){
+      lTalon.set(ControlMode.PercentOutput, 1);
     }
   }
-
 }
