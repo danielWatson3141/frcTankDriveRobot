@@ -32,16 +32,7 @@ public class fourWheelRobot extends TimedRobot {
   private TalonSRX r1Talon;
   private TalonSRX l2Talon;
   private TalonSRX r2Talon;
-  private JoystickButton aButton;
-  private JoystickButton bButton;
-  private JoystickButton xButton;
-  private JoystickButton yButton;
-  private JoystickButton lBumper;
-  private JoystickButton rBumper;
-  private JoystickButton backButton;
-  private JoystickButton startButton;
-  private JoystickButton lStickPress;
-  private JoystickButton rStickPress;
+
   private Servo servo;
 
   @Override
