@@ -71,6 +71,7 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("IR", IR);
+    SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
@@ -116,5 +117,20 @@ public class colorSensingRobot extends TimedRobot {
         spinnerTalon.set(ControlMode.PercentOutput, 1);
       break;
     }
+  }
+
+  private String ColorToString(Color c){
+    double r = c.red;
+    double g = c.green;
+    double b = c.blue;
+
+    if(r > g && r > b)
+      return "RED";
+    if(r > b && g > b)
+      return "YELLOW";
+    if(g-b > .2)
+      return "GREEN";
+    return "BLUE";
+
   }
 }
