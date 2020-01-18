@@ -35,6 +35,9 @@ public class colorSensingRobot extends TimedRobot {
   private final int spin = 1;
   private final int spinT = 2;
   private int state = 0;
+  private int sectorCount = 0;
+  private int startColor;
+  private int currentColor;
 
   private final String red = "RED";
   private final String yellow = "YELLOW";
@@ -42,6 +45,7 @@ public class colorSensingRobot extends TimedRobot {
   private final String green = "GREEN";
 
   private final String[] colors = {red, yellow, blue, green};
+  private final String[] LastC = {red};
 
   private int targetColor = 0;
 
@@ -81,7 +85,7 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("IR", IR);
-    SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
+    SmartDashboard.putString("Color Sensed", colors[ColorToInt(detectedColor)]);
     SmartDashboard.putString("Target Color", colors[targetColor]);
 
     /**
@@ -102,6 +106,7 @@ public class colorSensingRobot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    int dColor = ColorToInt(detectedColor);
 
     if(myController.getBumperPressed(Hand.kRight)){
       targetColor += 1;
@@ -115,28 +120,41 @@ public class colorSensingRobot extends TimedRobot {
         drive();
         if(myController.getYButtonPressed()){
           state = spin;
+          sectorCount = 0;
+          currentColor = dColor;
+        }
+        else if(myController.getBumperPressed(Hand.kLeft)){
+          state = spinT;
+          break;
         }
 
       break;
       case spin : 
+        
         spinnerTalon.set(ControlMode.PercentOutput, 1);
         if(myController.getYButtonPressed()){
           state = drive;
           break;
         }
-        if(myController.getBumperPressed(Hand.kLeft)){
-          state = spinT;
-          break;
+        if(dColor == (currentColor + 1)%4)
+        {
+          sectorCount++;
+          currentColor++;
+          currentColor%=4;
         }
-
+        if(sectorCount == 28)
+        {
+          state = drive;
+        }
+        
+        
 
       break;
       case spinT :
 
-        String tColor = colors[(targetColor+2) % 4];
-        String dColor = ColorToString(detectedColor);
+        
 
-        if(tColor == dColor){
+        if(targetColor == dColor){
           spinnerTalon.set(ControlMode.PercentOutput, 0);
           state = drive;
         }else{
@@ -146,19 +164,19 @@ public class colorSensingRobot extends TimedRobot {
     }
   }
 
-  private String ColorToString(Color c){
+  private int ColorToInt(Color c){
     double r = c.red;
     double g = c.green;
     double b = c.blue;
 
     if(r > g && r > b)
-      return "RED";
+      return 0;
     if(g-b > .2){
       if(r > b && g > b)
-        return "YELLOW";
-      return "GREEN";
+        return 1;
+      return 3;
     }
-    return "BLUE";
+    return 2;
 
   }
 
