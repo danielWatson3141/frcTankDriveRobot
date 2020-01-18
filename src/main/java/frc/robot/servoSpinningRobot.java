@@ -7,17 +7,14 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically
@@ -31,6 +28,18 @@ public class servoSpinningRobot extends TimedRobot {
  
 
   private Servo servo;
+
+   /**
+   * Change the I2C port below to match the connection of your color sensor
+   */
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+
+  /**
+   * A Rev Color Sensor V3 object is constructed with an I2C port as a 
+   * parameter. The device will be automatically initialized with default 
+   * parameters.
+   */
+  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
   @Override
   public void robotInit() {
@@ -47,7 +56,10 @@ public class servoSpinningRobot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    servo.set(m_leftStick.getDirectionDegrees() / 360 );
+    double IR = m_colorSensor.getIR();
+
+
+    servo.set( IR / 50 );
 
     
   }
