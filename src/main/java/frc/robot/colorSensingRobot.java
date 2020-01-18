@@ -7,12 +7,16 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-
-import com.revrobotics.ColorSensorV3;
 
 public class colorSensingRobot extends TimedRobot {
   /**
@@ -26,6 +30,18 @@ public class colorSensingRobot extends TimedRobot {
    * parameters.
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+  private final int drive = 0;
+  private final int spin = 1;
+  private final int spinT = 2;
+  private int state = 0;
+  private TalonSRX spinnerTalon = new TalonSRX(0);
+  XboxController myController = new XboxController(0);
+
+  Color detectedColor;
+  Color targetColor = Color.kRed;
+  double IR;
+  double proximity;
+ 
 
   @Override
   public void robotPeriodic() {
@@ -39,12 +55,13 @@ public class colorSensingRobot extends TimedRobot {
      * an object is the more light from the surroundings will bleed into the 
      * measurements and make it difficult to accurately determine its color.
      */
-    Color detectedColor = m_colorSensor.getColor();
+    detectedColor = m_colorSensor.getColor();
+    SmartDashboard.putString("detected Color", detectedColor.toString());
 
     /**
      * The sensor returns a raw IR value of the infrared light detected.
      */
-    double IR = m_colorSensor.getIR();
+    IR = m_colorSensor.getIR();
 
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the 
@@ -66,9 +83,38 @@ public class colorSensingRobot extends TimedRobot {
      * or provide a threshold for when an object is close enough to provide
      * accurate color values.
      */
-    int proximity = m_colorSensor.getProximity();
+    proximity = m_colorSensor.getProximity();
 
     SmartDashboard.putNumber("Proximity", proximity);
+  }
 
+  @Override
+  public void teleopPeriodic() {
+    switch (state){
+      case drive : 
+        //drive code
+        if(myController.getYButtonPressed()){
+          state = spin;
+        }
+
+      break;
+      case spin : 
+        spinnerTalon.set(ControlMode.PercentOutput, 1);
+        if(myController.getYButtonPressed()){
+          state = drive;
+          break;
+        }
+        if(myController.getBumperPressed(Hand.kRight)){
+          state = spinT;
+          break;
+        }
+
+
+      break;
+      case spinT :
+        //detectedColor, Proximity, IR
+        spinnerTalon.set(ControlMode.PercentOutput, 1);
+      break;
+    }
   }
 }

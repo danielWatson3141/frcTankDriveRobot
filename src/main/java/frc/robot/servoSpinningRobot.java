@@ -41,6 +41,11 @@ public class servoSpinningRobot extends TimedRobot {
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
+  private final int drive = 0;
+  private final int spin = 1;
+  private final int spinT = 2;
+
+
   @Override
   public void robotInit() {
 
@@ -57,8 +62,6 @@ public class servoSpinningRobot extends TimedRobot {
   public void teleopPeriodic() {
 
     double IR = m_colorSensor.getIR();
-
-
     servo.set( IR / 50 );
 
     
