@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.Talon;
  * This is a demo program showing the use of the RobotDrive class, specifically
  * it contains the code necessary to operate a robot with tank drive.
  */
-public class Robot extends TimedRobot {
+public class motorMovingRobot extends TimedRobot {
 
   private AtomicBoolean isSpinning;
 
@@ -64,14 +64,17 @@ public class Robot extends TimedRobot {
 
     myController = new XboxController(0);
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
+    m_leftStick = new Joystick(1);
 
 
     l1Talon = new WPI_TalonSRX(1);
     rVEX = new WPI_VictorSPX(0);
     l2Talon = new WPI_TalonSRX(3);
     rTalon = new WPI_TalonSRX(4);
+
+    motorcontrol = new Talon(2);
+
+  
      
     //aButton = myController.getAButton(); //servo button
 
@@ -102,11 +105,11 @@ public class Robot extends TimedRobot {
         double leftSpeed;
         double rightSpeed;
 
-        leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
-        rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
+        leftSpeed = (m_leftStick.getY()+m_leftStick.getX())*.5;
+        rightSpeed = (-m_leftStick.getY()+m_leftStick.getX())*.5;
 
-       rTalon.set(ControlMode.PercentOutput, rightSpeed);
-       rVEX.set(ControlMode.PercentOutput, rightSpeed);
+        rTalon.set(ControlMode.PercentOutput, rightSpeed);
+        rVEX.set(ControlMode.PercentOutput, rightSpeed);
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
         l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 

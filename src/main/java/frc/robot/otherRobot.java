@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.*;
+//import com.sun.java.swing.plaf.windows.TMSchema.Control;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically
@@ -42,12 +44,12 @@ public class otherRobot extends TimedRobot {
   private JoystickButton startButton;
   private JoystickButton lStickPress;
   private JoystickButton rStickPress;
+  
 
   @Override
   public void robotInit() {
     //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
+    m_leftStick = new Joystick(1);
     rTalon = new WPI_TalonSRX(10);
     rVex = new WPI_VictorSPX(0);
     lTalonOne = new WPI_TalonSRX(1);
@@ -64,24 +66,39 @@ public class otherRobot extends TimedRobot {
     // lStickPress = new JoystickButton(8);
     // rStickPress = new JoystickButton(9);     
 
+    System.out.println("Starting up the other robot");
+
     
 
   }
 
   @Override
+  public void robotPeriodic() {
+
+    System.out.println("working");
+  }
+
+  @Override
   public void teleopPeriodic() {
     //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+    double leftSpeed;
+    double rightSpeed;
 
-    //if(m_leftStck.getRawButtonPressed{
-      //spin();
-    //}else{
-      // rTalon.set(ControlMode.PercentOutput, (m_rightStick.getY()+m_rightStick.getX())*.5);
-      // lVex.set(ControlMode.PercentOutput, (m_rightStick.getY()+m_rightStick.getX())*.5);
-      // lTalonOne.set(ControlMode.PercentOutput, (-m_rightStick.getY()+m_rightStick.getX())*.5);
-      // rTalonTwo.set(ControlMode.PercentOutput, (-m_rightStick.getY()+m_rightStick.getX())*.5);
-    //}
+    leftSpeed = (m_leftStick.getY()+m_leftStick.getX())*.5;
+    rightSpeed = (-m_leftStick.getY()+m_leftStick.getX())*.5;
+    SmartDashboard.putNumber("Left Stick speed", leftSpeed);
+    SmartDashboard.putNumber("Right stick speed", rightSpeed);
     
+    rVex.set(ControlMode.PercentOutput, leftSpeed);
+    rTalon.set(ControlMode.PercentOutput, leftSpeed);
+
+    System.out.println("leftSpeed");
+    System.out.println(leftSpeed);
+    System.out.println("rightSpeed");
+    System.out.println(rightSpeed);
+
     
+
   }
 
   //make the robot spin 180 degrees once

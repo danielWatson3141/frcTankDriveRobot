@@ -9,12 +9,14 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -45,6 +47,9 @@ public class colorSensingRobot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+
+    System.out.println("Running");
+
     /**
      * The method GetColor() returns a normalized color value from the sensor and can be
      * useful if outputting the color to an RGB LED or similar. To
@@ -91,6 +96,9 @@ public class colorSensingRobot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    WPI_TalonSRX rTalon = new WPI_TalonSRX(10);
+    WPI_VictorSPX rVex = new WPI_VictorSPX(0);
+    rTalon.set(ControlMode.PercentOutput, .1);
     switch (state){
       case drive : 
         //drive code
@@ -126,10 +134,11 @@ public class colorSensingRobot extends TimedRobot {
 
     if(r > g && r > b)
       return "RED";
-    if(r > b && g > b)
-      return "YELLOW";
-    if(g-b > .2)
+    if(g-b > .2){
+      if(r > b && g > b)
+        return "YELLOW";
       return "GREEN";
+    }
     return "BLUE";
 
   }
