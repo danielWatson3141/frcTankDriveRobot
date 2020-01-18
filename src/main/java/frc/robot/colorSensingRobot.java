@@ -32,15 +32,29 @@ public class colorSensingRobot extends TimedRobot {
    * parameters.
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
   private final int drive = 0;
   private final int spin = 1;
   private final int spinT = 2;
   private int state = 0;
+  private int sectorCount = 0;
+  private int startColor;
+  private int currentColor;
+
+  private final String red = "RED";
+  private final String yellow = "YELLOW";
+  private final String blue = "BLUE";
+  private final String green = "GREEN";
+
+  private final String[] colors = {red, yellow, blue, green};
+  private final String[] LastC = {red};
+
+  private int targetColor = 0;
+
   private TalonSRX spinnerTalon = new TalonSRX(0);
   XboxController myController = new XboxController(0);
 
   Color detectedColor;
-  Color targetColor = Color.kRed;
   double IR;
   double proximity;
  
@@ -76,7 +90,8 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("IR", IR);
-    SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
+    SmartDashboard.putString("Color Sensed", colors[ColorToInt(detectedColor)]);
+    SmartDashboard.putString("Target Color", colors[targetColor]);
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
@@ -96,50 +111,81 @@ public class colorSensingRobot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    WPI_TalonSRX rTalon = new WPI_TalonSRX(10);
-    WPI_VictorSPX rVex = new WPI_VictorSPX(0);
-    rTalon.set(ControlMode.PercentOutput, .1);
+    int dColor = ColorToInt(detectedColor);
+
+    if(myController.getBumperPressed(Hand.kRight)){
+      targetColor += 1;
+      if( targetColor > 3){
+        targetColor = 0;
+      }
+    }
+
     switch (state){
       case drive : 
-        //drive code
+        drive();
         if(myController.getYButtonPressed()){
           state = spin;
+          sectorCount = 0;
+          currentColor = dColor;
+        }
+        else if(myController.getBumperPressed(Hand.kLeft)){
+          state = spinT;
+          break;
         }
 
       break;
       case spin : 
+        
         spinnerTalon.set(ControlMode.PercentOutput, 1);
         if(myController.getYButtonPressed()){
           state = drive;
           break;
         }
-        if(myController.getBumperPressed(Hand.kRight)){
-          state = spinT;
-          break;
+        if(dColor == (currentColor + 1)%4)
+        {
+          sectorCount++;
+          currentColor++;
+          currentColor%=4;
         }
-
+        if(sectorCount == 28)
+        {
+          state = drive;
+        }
+        
+        
 
       break;
       case spinT :
-        //detectedColor, Proximity, IR
-        spinnerTalon.set(ControlMode.PercentOutput, 1);
-      break;
+
+        
+
+        if(targetColor == dColor){
+          spinnerTalon.set(ControlMode.PercentOutput, 0);
+          state = drive;
+        }else{
+          spinnerTalon.set(ControlMode.PercentOutput, 1);
+        }
+        break;
     }
   }
 
-  private String ColorToString(Color c){
+  private int ColorToInt(Color c){
     double r = c.red;
     double g = c.green;
     double b = c.blue;
 
     if(r > g && r > b)
-      return "RED";
+      return 0;
     if(g-b > .2){
       if(r > b && g > b)
-        return "YELLOW";
-      return "GREEN";
+        return 1;
+      return 3;
     }
-    return "BLUE";
+    return 2;
 
+  }
+
+  private void drive(){
+    //drive
   }
 }
