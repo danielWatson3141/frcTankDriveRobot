@@ -44,11 +44,10 @@ public class otherRobot extends TimedRobot {
   private JoystickButton startButton;
   private JoystickButton lStickPress;
   private JoystickButton rStickPress;
-  
 
   @Override
   public void robotInit() {
-    //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
+    // m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
     m_leftStick = new Joystick(1);
     rTalon = new WPI_TalonSRX(10);
     rVex = new WPI_VictorSPX(0);
@@ -64,11 +63,9 @@ public class otherRobot extends TimedRobot {
     // backButton = new JoystickButton(6);
     // startButton = new JoystickButton(7);
     // lStickPress = new JoystickButton(8);
-    // rStickPress = new JoystickButton(9);     
+    // rStickPress = new JoystickButton(9);
 
     System.out.println("Starting up the other robot");
-
-    
 
   }
 
@@ -80,15 +77,15 @@ public class otherRobot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+    // m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
     double leftSpeed;
     double rightSpeed;
 
-    leftSpeed = (m_leftStick.getY()+m_leftStick.getX())*.5;
-    rightSpeed = (-m_leftStick.getY()+m_leftStick.getX())*.5;
+    leftSpeed = (m_leftStick.getY() + m_leftStick.getX()) * .5;
+    rightSpeed = (-m_leftStick.getY() + m_leftStick.getX()) * .5;
     SmartDashboard.putNumber("Left Stick speed", leftSpeed);
     SmartDashboard.putNumber("Right stick speed", rightSpeed);
-    
+
     rVex.set(ControlMode.PercentOutput, leftSpeed);
     rTalon.set(ControlMode.PercentOutput, leftSpeed);
 
@@ -97,14 +94,12 @@ public class otherRobot extends TimedRobot {
     System.out.println("rightSpeed");
     System.out.println(rightSpeed);
 
-    
-
   }
 
-  //make the robot spin 180 degrees once
+  // make the robot spin 180 degrees once
   // public void spin() {
-  //   //
-  //   lTalon.set(ControlMode.PercentOutput, .5);
-  //   rTalon.set(ControlMode.PercentOutput, .5);
+  // //
+  // lTalon.set(ControlMode.PercentOutput, .5);
+  // rTalon.set(ControlMode.PercentOutput, .5);
   // }
 }

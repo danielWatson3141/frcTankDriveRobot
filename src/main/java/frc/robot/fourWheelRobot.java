@@ -39,39 +39,38 @@ public class fourWheelRobot extends TimedRobot {
   public void robotInit() {
 
     myController = new XboxController(0);
-    //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
+    // m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
     m_leftStick = new Joystick(0);
-    //m_rightStick = new Joystick(1);
+    // m_rightStick = new Joystick(1);
 
     l1Talon = new WPI_TalonSRX(1);
     l2Talon = new WPI_TalonSRX(2);
     r1Talon = new WPI_TalonSRX(3);
     r2Talon = new WPI_TalonSRX(4);
 
-    servo = new Servo(0);   
+    servo = new Servo(0);
 
   }
 
   @Override
   public void teleopPeriodic() {
-    //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+    // m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
 
     // if(m_leftStck.getRawButtonPressed){
-    // }    
+    // }
 
     double leftSpeed;
     double rightSpeed;
 
-    leftSpeed = (m_rightStick.getY()+m_rightStick.getX())*.5;
-    rightSpeed = (-m_rightStick.getY()+m_rightStick.getX())*.5;
+    leftSpeed = (m_rightStick.getY() + m_rightStick.getX()) * .5;
+    rightSpeed = (-m_rightStick.getY() + m_rightStick.getX()) * .5;
 
-    l1Talon.set(ControlMode.PercentOutput, leftSpeed );
-    l2Talon.set(ControlMode.PercentOutput, leftSpeed );
+    l1Talon.set(ControlMode.PercentOutput, leftSpeed);
+    l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
     r1Talon.set(ControlMode.PercentOutput, rightSpeed);
     r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
-    
   }
 
 }

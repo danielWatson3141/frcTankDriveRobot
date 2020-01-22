@@ -9,8 +9,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -27,77 +25,74 @@ public class colorSensingRobot extends TimedRobot {
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
   /**
-   * A Rev Color Sensor V3 object is constructed with an I2C port as a 
-   * parameter. The device will be automatically initialized with default 
-   * parameters.
+   * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter.
+   * The device will be automatically initialized with default parameters.
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
-  //These are the states the robot can take
+  // These are the states the robot can take
   private final int drive = 0;
   private final int spin = 1;
   private final int spinT = 2;
 
-  //This variable stores the robot's current state
+  // This variable stores the robot's current state
   private int state = 0;
 
-
-  //This is the motor for spinning the spinner wheel
+  // This is the motor for spinning the spinner wheel
   private TalonSRX spinnerTalon = new TalonSRX(0);
 
-  //The Xbox controller input device
+  // The Xbox controller input device
   XboxController myController = new XboxController(0);
 
-  //The color currently detected by the sensor
+  // The color currently detected by the sensor
   Color detectedColor;
 
-  //Intensity of IR radiation hitting the sensor. Can detect heat and light
+  // Intensity of IR radiation hitting the sensor. Can detect heat and light
   double IR;
 
-  //Intensity of transmitted IR light returning to sensor. High number means close subject
+  // Intensity of transmitted IR light returning to sensor. High number means
+  // close subject
   double proximity;
 
-  
-  //These variables store the number of sectors seen so far on the color wheel
+  // These variables store the number of sectors seen so far on the color wheel
   private int sectorCount = 0;
 
-  //This stores the color we saw most recently not counting backtracks
+  // This stores the color we saw most recently not counting backtracks
   private int currentColor;
 
-  //short forms for color strings
+  // short forms for color strings
   private final String red = "RED";
   private final String yellow = "YELLOW";
   private final String blue = "BLUE";
   private final String green = "GREEN";
 
-  //an array for converting int to string and back
-  private final String[] colors = {red, yellow, blue, green};
+  // an array for converting int to string and back
+  private final String[] colors = { red, yellow, blue, green };
 
-  //The color that the user has designated the target color
+  // The color that the user has designated the target color
   private int targetColor = 0;
 
-  private int dColor; 
- 
+  private int dColor;
 
   @Override
   public void robotPeriodic() {
 
     /**
-     * The method GetColor() returns a normalized color value from the sensor and can be
-     * useful if outputting the color to an RGB LED or similar. To
-     * read the raw color, use GetRawColor().
+     * The method GetColor() returns a normalized color value from the sensor and
+     * can be useful if outputting the color to an RGB LED or similar. To read the
+     * raw color, use GetRawColor().
      * 
-     * The color sensor works best when within a few inches from an object in
-     * well lit conditions (the built in LED is a big help here!). The farther
-     * an object is the more light from the surroundings will bleed into the 
-     * measurements and make it difficult to accurately determine its color.
+     * The color sensor works best when within a few inches from an object in well
+     * lit conditions (the built in LED is a big help here!). The farther an object
+     * is the more light from the surroundings will bleed into the measurements and
+     * make it difficult to accurately determine its color.
      */
     detectedColor = m_colorSensor.getColor();
 
-    //convert the detected color to an int
-    dColor= ColorToInt(detectedColor);
+    // convert the detected color to an int
+    dColor = ColorToInt(detectedColor);
 
-    //show the detected color on the dashboard
+    // show the detected color on the dashboard
     SmartDashboard.putString("detected Color", colors[dColor]);
 
     /**
@@ -106,8 +101,7 @@ public class colorSensingRobot extends TimedRobot {
     IR = m_colorSensor.getIR();
 
     /**
-     * Open Smart Dashboard or Shuffleboard to see the color detected by the 
-     * sensor.
+     * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
      */
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
@@ -117,78 +111,80 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putString("Target Color", colors[targetColor]);
 
     /**
-     * In addition to RGB IR values, the color sensor can also return an 
-     * infrared proximity value. The chip contains an IR led which will emit
-     * IR pulses and measure the intensity of the return. When an object is 
-     * close the value of the proximity will be large (max 2047 with default
-     * settings) and will approach zero when the object is far away.
+     * In addition to RGB IR values, the color sensor can also return an infrared
+     * proximity value. The chip contains an IR led which will emit IR pulses and
+     * measure the intensity of the return. When an object is close the value of the
+     * proximity will be large (max 2047 with default settings) and will approach
+     * zero when the object is far away.
      * 
-     * Proximity can be used to roughly approximate the distance of an object
-     * or provide a threshold for when an object is close enough to provide
-     * accurate color values.
+     * Proximity can be used to roughly approximate the distance of an object or
+     * provide a threshold for when an object is close enough to provide accurate
+     * color values.
      */
     proximity = m_colorSensor.getProximity();
 
     SmartDashboard.putNumber("Proximity", proximity);
   }
 
-  //This method is called about 10 times per second while the robot is set to teleop mode.
+  // This method is called about 10 times per second while the robot is set to
+  // teleop mode.
   @Override
   public void teleopPeriodic() {
 
-    //detected color is set in robotPeriod
-    //This converts the color to an integer representing one of the four colors in play
+    // detected color is set in robotPeriod
+    // This converts the color to an integer representing one of the four colors in
+    // play
 
-    if(myController.getBumperPressed(Hand.kRight)){
+    if (myController.getBumperPressed(Hand.kRight)) {
       targetColor += 1;
-      if( targetColor > 3){
+      if (targetColor > 3) {
         targetColor = 0;
       }
     }
 
-    //This section controls state behavior. It defines state transitions and initializations
-    switch (state){
-      
-      case drive : 
-        drive();
-        if(myController.getYButtonPressed()){
-          state = spin;
-          sectorCount = 0;
-          currentColor = dColor;
-          break;
-        }
-        else if(myController.getBumperPressed(Hand.kLeft)){
-          state = spinT;
-          break;
-        }
+    // This section controls state behavior. It defines state transitions and
+    // initializations
+    switch (state) {
+
+    case drive:
+      drive();
+      if (myController.getYButtonPressed()) {
+        state = spin;
+        sectorCount = 0;
+        currentColor = dColor;
+        break;
+      } else if (myController.getBumperPressed(Hand.kLeft)) {
+        state = spinT;
+        break;
+      }
 
       break;
-      case spin : 
-        spin();
-        if(myController.getYButtonPressed()){
-          state = drive;
-        }
-        
+    case spin:
+      spin();
+      if (myController.getYButtonPressed()) {
+        state = drive;
+      }
+
       break;
-      case spinT :
-        spinT();
-        if(targetColor == dColor){
-          spinnerTalon.set(ControlMode.PercentOutput, 0);
-          state = drive;
-        }
-        break;
+    case spinT:
+      spinT();
+      if (targetColor == dColor) {
+        spinnerTalon.set(ControlMode.PercentOutput, 0);
+        state = drive;
+      }
+      break;
     }
   }
 
-  private int ColorToInt(Color c){
+  private int ColorToInt(Color c) {
     double r = c.red;
     double g = c.green;
     double b = c.blue;
 
-    if(r > g && r > b)
+    if (r > g && r > b)
       return 0;
-    if(g-b > .2){
-      if(r > b && g > b)
+    if (g - b > .2) {
+      if (r > b && g > b)
         return 1;
       return 3;
     }
@@ -196,30 +192,28 @@ public class colorSensingRobot extends TimedRobot {
 
   }
 
-  private String ColorToString(Color c){
+  private String ColorToString(Color c) {
     return colors[ColorToInt(c)];
   }
 
-  private void drive(){
-    //drive
+  private void drive() {
+    // drive
   }
 
-  private void spin(){
+  private void spin() {
     spinnerTalon.set(ControlMode.PercentOutput, 1);
-    if(dColor == (currentColor + 1)%4)
-    {
+    if (dColor == (currentColor + 1) % 4) {
       sectorCount++;
       currentColor++;
-      currentColor%=4;
+      currentColor %= 4;
     }
-    if(sectorCount == 28)
-    {
+    if (sectorCount == 28) {
       state = drive;
     }
 
   }
 
-  private void spinT(){
+  private void spinT() {
     spinnerTalon.set(ControlMode.PercentOutput, .2);
   }
 }

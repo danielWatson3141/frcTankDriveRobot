@@ -33,20 +33,7 @@ public class treadRobot extends TimedRobot {
   private Joystick leftStick;
   private TalonSRX lTalon;
   private TalonSRX rTalon;
-  
 
-  @Override
-  public void robotInit() {
-
-    myController = new XboxController(0);
-    //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
-    leftStick = new Joystick(1);
-
-    lTalon = new TalonSRX(3);
-    rTalon = new TalonSRX(4);
-  }
-
-  
   @Override
   public void robotPeriodic() {
 
@@ -54,36 +41,34 @@ public class treadRobot extends TimedRobot {
     SmartDashboard.putNumber("Ly", leftStick.getY());
   }
 
-
   @Override
   public void teleopPeriodic() {
     double leftSpeed;
     double rightSpeed;
 
-    leftSpeed = (leftStick.getY()+leftStick.getX())*.5;
-    rightSpeed = (-leftStick.getY()+leftStick.getX())*.5;
+    leftSpeed = (leftStick.getY() + leftStick.getX()) * .5;
+    rightSpeed = (-leftStick.getY() + leftStick.getX()) * .5;
 
     lTalon.set(ControlMode.PercentOutput, leftSpeed);
 
     rTalon.set(ControlMode.PercentOutput, rightSpeed);
 
-
-    /* (new WPI_TalonSRX(3)).set(ControlMode.PercentOutput, .2);
-    (new WPI_TalonSRX(4)).set(ControlMode.PercentOutput, .2);
-    (new WPI_TalonSRX(1)).set(ControlMode.PercentOutput, .2);
-    (new WPI_TalonSRX(2)).set(ControlMode.PercentOutput, .2);
-
-    
-    (new TalonSRX(3)).set(ControlMode.PercentOutput, .2);
-    (new TalonSRX(4)).set(ControlMode.PercentOutput, .2);
-    (new TalonSRX(1)).set(ControlMode.PercentOutput, .2);
-     (new TalonSRX(2)).set(ControlMode.PercentOutput, .2);*/
-
-    
+    /*
+     * (new WPI_TalonSRX(3)).set(ControlMode.PercentOutput, .2); (new
+     * WPI_TalonSRX(4)).set(ControlMode.PercentOutput, .2); (new
+     * WPI_TalonSRX(1)).set(ControlMode.PercentOutput, .2); (new
+     * WPI_TalonSRX(2)).set(ControlMode.PercentOutput, .2);
+     * 
+     * 
+     * (new TalonSRX(3)).set(ControlMode.PercentOutput, .2); (new
+     * TalonSRX(4)).set(ControlMode.PercentOutput, .2); (new
+     * TalonSRX(1)).set(ControlMode.PercentOutput, .2); (new
+     * TalonSRX(2)).set(ControlMode.PercentOutput, .2);
+     */
 
     // if(myController.getAButtonPressed()){
-    //   lTalon.set(ControlMode.PercentOutput, 1);
-    //   rTalon.set(ControlMode.PercentOutput, 1);
+    // lTalon.set(ControlMode.PercentOutput, 1);
+    // rTalon.set(ControlMode.PercentOutput, 1);
     // }
   }
 }

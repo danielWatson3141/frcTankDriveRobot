@@ -25,19 +25,17 @@ public class servoSpinningRobot extends TimedRobot {
   private DifferentialDrive m_myRobot;
   private Joystick m_leftStick;
   private Joystick m_rightStick;
- 
 
   private Servo servo;
 
-   /**
+  /**
    * Change the I2C port below to match the connection of your color sensor
    */
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
   /**
-   * A Rev Color Sensor V3 object is constructed with an I2C port as a 
-   * parameter. The device will be automatically initialized with default 
-   * parameters.
+   * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter.
+   * The device will be automatically initialized with default parameters.
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
@@ -45,16 +43,15 @@ public class servoSpinningRobot extends TimedRobot {
   private final int spin = 1;
   private final int spinT = 2;
 
-
   @Override
   public void robotInit() {
 
     myController = new XboxController(0);
-    //m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
+    // m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
     m_leftStick = new Joystick(0);
-    //m_rightStick = new Joystick(1);
+    // m_rightStick = new Joystick(1);
 
-    servo = new Servo(0);   
+    servo = new Servo(0);
 
   }
 
@@ -62,9 +59,8 @@ public class servoSpinningRobot extends TimedRobot {
   public void teleopPeriodic() {
 
     double IR = m_colorSensor.getIR();
-    servo.set( IR / 50 );
+    servo.set(IR / 50);
 
-    
   }
 
 }
