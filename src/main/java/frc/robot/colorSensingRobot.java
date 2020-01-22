@@ -33,36 +33,54 @@ public class colorSensingRobot extends TimedRobot {
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
+  //These are the states the robot can take
   private final int drive = 0;
   private final int spin = 1;
   private final int spinT = 2;
+
+  //This variable stores the robot's current state
   private int state = 0;
+
+
+  //This is the motor for spinning the spinner wheel
+  private TalonSRX spinnerTalon = new TalonSRX(0);
+
+  //The Xbox controller input device
+  XboxController myController = new XboxController(0);
+
+  //The color currently detected by the sensor
+  Color detectedColor;
+
+  //Intensity of IR radiation hitting the sensor. Can detect heat and light
+  double IR;
+
+  //Intensity of transmitted IR light returning to sensor. High number means close subject
+  double proximity;
+
+  
+  //These variables store the number of sectors seen so far on the color wheel
   private int sectorCount = 0;
-  private int startColor;
+
+  //This stores the color we saw most recently not counting backtracks
   private int currentColor;
 
+  //short forms for color strings
   private final String red = "RED";
   private final String yellow = "YELLOW";
   private final String blue = "BLUE";
   private final String green = "GREEN";
 
+  //an array for converting int to string and back
   private final String[] colors = {red, yellow, blue, green};
-  private final String[] LastC = {red};
 
+  //The color that the user has designated the target color
   private int targetColor = 0;
 
-  private TalonSRX spinnerTalon = new TalonSRX(0);
-  XboxController myController = new XboxController(0);
-
-  Color detectedColor;
-  double IR;
-  double proximity;
+  private int dColor; 
  
 
   @Override
   public void robotPeriodic() {
-
-    System.out.println("Running");
 
     /**
      * The method GetColor() returns a normalized color value from the sensor and can be
@@ -75,7 +93,12 @@ public class colorSensingRobot extends TimedRobot {
      * measurements and make it difficult to accurately determine its color.
      */
     detectedColor = m_colorSensor.getColor();
-    SmartDashboard.putString("detected Color", detectedColor.toString());
+
+    //convert the detected color to an int
+    dColor= ColorToInt(detectedColor);
+
+    //show the detected color on the dashboard
+    SmartDashboard.putString("detected Color", colors[dColor]);
 
     /**
      * The sensor returns a raw IR value of the infrared light detected.
@@ -90,7 +113,7 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("IR", IR);
-    SmartDashboard.putString("Color Sensed", colors[ColorToInt(detectedColor)]);
+    SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
     SmartDashboard.putString("Target Color", colors[targetColor]);
 
     /**
@@ -109,9 +132,12 @@ public class colorSensingRobot extends TimedRobot {
     SmartDashboard.putNumber("Proximity", proximity);
   }
 
+  //This method is called about 10 times per second while the robot is set to teleop mode.
   @Override
   public void teleopPeriodic() {
-    int dColor = ColorToInt(detectedColor);
+
+    //detected color is set in robotPeriod
+    //This converts the color to an integer representing one of the four colors in play
 
     if(myController.getBumperPressed(Hand.kRight)){
       targetColor += 1;
@@ -120,13 +146,16 @@ public class colorSensingRobot extends TimedRobot {
       }
     }
 
+    //This section controls state behavior. It defines state transitions and initializations
     switch (state){
+      
       case drive : 
         drive();
         if(myController.getYButtonPressed()){
           state = spin;
           sectorCount = 0;
           currentColor = dColor;
+          break;
         }
         else if(myController.getBumperPressed(Hand.kLeft)){
           state = spinT;
@@ -135,35 +164,17 @@ public class colorSensingRobot extends TimedRobot {
 
       break;
       case spin : 
-        
-        spinnerTalon.set(ControlMode.PercentOutput, 1);
+        spin();
         if(myController.getYButtonPressed()){
           state = drive;
-          break;
-        }
-        if(dColor == (currentColor + 1)%4)
-        {
-          sectorCount++;
-          currentColor++;
-          currentColor%=4;
-        }
-        if(sectorCount == 28)
-        {
-          state = drive;
         }
         
-        
-
       break;
       case spinT :
-
-        
-
+        spinT();
         if(targetColor == dColor){
           spinnerTalon.set(ControlMode.PercentOutput, 0);
           state = drive;
-        }else{
-          spinnerTalon.set(ControlMode.PercentOutput, 1);
         }
         break;
     }
@@ -185,7 +196,30 @@ public class colorSensingRobot extends TimedRobot {
 
   }
 
+  private String ColorToString(Color c){
+    return colors[ColorToInt(c)];
+  }
+
   private void drive(){
     //drive
+  }
+
+  private void spin(){
+    spinnerTalon.set(ControlMode.PercentOutput, 1);
+    if(dColor == (currentColor + 1)%4)
+    {
+      sectorCount++;
+      currentColor++;
+      currentColor%=4;
+    }
+    if(sectorCount == 28)
+    {
+      state = drive;
+    }
+
+  }
+
+  private void spinT(){
+    spinnerTalon.set(ControlMode.PercentOutput, .2);
   }
 }
