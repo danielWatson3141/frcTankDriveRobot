@@ -36,6 +36,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private final int drive = 0;
     private final int spin = 1;
     private final int spinT = 2;
+    private final String[] states = {"DRIVE", "SPIN", "SPINT"};
 
     // This variable stores the robot's current state
     private int state = 0;
@@ -121,6 +122,8 @@ public class colorSensingWheelBot extends TimedRobot {
         // show the detected color on the dashboard
         SmartDashboard.putString("detected Color", colors[dColor]);
 
+        SmartDashboard.putString("State", states[state]);
+
         /**
          * The sensor returns a raw IR value of the infrared light detected.
          */
@@ -186,6 +189,7 @@ public class colorSensingWheelBot extends TimedRobot {
         case spin:
             spin();
             if (myController.getYButtonPressed()) {
+                vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
 
@@ -235,7 +239,7 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spin() {
-        vex.set(ControlMode.PercentOutput, 1);
+        vex.set(ControlMode.PercentOutput, .1);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             currentColor++;
@@ -248,6 +252,6 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spinT() {
-        vex.set(ControlMode.PercentOutput, .2);
+        vex.set(ControlMode.PercentOutput, .1);
     }
 }
