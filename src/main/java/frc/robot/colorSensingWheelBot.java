@@ -96,6 +96,8 @@ public class colorSensingWheelBot extends TimedRobot {
         r1Talon = new TalonSRX(2);
         l2Talon = new TalonSRX(3);
         r2Talon = new TalonSRX(4);
+
+        vex = new VictorSPX(8);
     }
 
     @Override
