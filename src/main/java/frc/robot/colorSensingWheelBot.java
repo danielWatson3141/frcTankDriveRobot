@@ -228,8 +228,7 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case balls:
-            ballServo.setAngle(135);
-            chain.set(ControlMode.PercentOutput, 1);
+            balls();
             if (myController.getBButtonPressed()) {
                 ballServo.setAngle(0);
                 chain.set(ControlMode.PercentOutput, 0);
@@ -304,5 +303,10 @@ public class colorSensingWheelBot extends TimedRobot {
 
     private void spinT() {
         vex.set(ControlMode.PercentOutput, .1);
+    }
+
+    private void balls() {
+        ballServo.setAngle(135);
+        chain.set(ControlMode.PercentOutput, 1);
     }
 }
