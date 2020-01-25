@@ -192,6 +192,13 @@ public class colorSensingWheelBot extends TimedRobot {
 
         case drive:
             drive();
+
+            if (heffectBottom.get()) {
+                extTalon.set(ControlMode.PercentOutput, 0);
+            }else{
+                extTalon.set(ControlMode.PercentOutput, -.2);
+            }
+
             if (myController.getYButtonPressed()) {
                 state = spin;
                 sectorCount = 0;
@@ -238,26 +245,30 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case extend:
-            if (heffectBottom.get()) {
+            drive();
+            if (heffectTop.get()) {
+                extTalon.set(ControlMode.PercentOutput, 0);
+                state = drive;
+            } else {
                 extTalon.set(ControlMode.PercentOutput, .2);
-                if (heffectTop.get()) {
-                    extTalon.set(ControlMode.PercentOutput, 0);
-                    state = drive;
-                }
-            } else if (heffectTop.get()) {
-                extTalon.set(ControlMode.PercentOutput, -.2);
-                if (heffectBottom.get()) {
-                    extTalon.set(ControlMode.PercentOutput, 0);
-                    state = drive;
-                }
-            } else if (myController.getBButtonPressed()) {
-                extTalon.set(ControlMode.PercentOutput, -.2);
-                if (heffectBottom.get()) {
-                    extTalon.set(ControlMode.PercentOutput, 0);
-                    state = drive;
-                }
             }
+
+            if (myController.getBButtonPressed()) {
+                state = drive;
+            }
+
+            if(myController.getStickButtonPressed(Hand.kRight)){
+                state = retract;
+            }
+
             break;
+
+        case retract:
+            extTalon.set(ControlMode.PercentOutput, -.2);   
+            if (heffectBottom.get()) {
+                extTalon.set(ControlMode.PercentOutput, 0);
+                state = drive;
+            }
         }
     }
 
