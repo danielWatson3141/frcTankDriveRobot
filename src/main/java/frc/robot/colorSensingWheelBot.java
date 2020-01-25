@@ -212,7 +212,12 @@ public class colorSensingWheelBot extends TimedRobot {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
+            else if (myController.getBumperPressed(Hand.kLeft)) {
+                vex.set(ControlMode.PercentOutput, 0);
+                state = drive;
+            }
             break;
+
         case balls:
             ballServo.setAngle(135);
             chain.set(ControlMode.PercentOutput, 1);
