@@ -249,6 +249,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 if (heffectBottom.get()) {
                     extTalon.set(ControlMode.PercentOutput, 0);
                     state = drive;
+                }
             } else if (myController.getBButtonPressed()) {
                 extTalon.set(ControlMode.PercentOutput, -.2);
                 if (heffectBottom.get()) {
