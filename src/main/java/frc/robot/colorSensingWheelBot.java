@@ -193,7 +193,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 break;
             }
             else if (myController.getBButtonPressed()) {
-                state = ballState;
+                state = balls;
                 break;
             }
 
@@ -213,7 +213,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 state = drive;
             }
             break;
-        case ballState:
+        case balls:
             ballServo.setAngle(135);
             chain.set(ControlMode.PercentOutput, 1);
             if (myController.getBButtonPressed()) {
