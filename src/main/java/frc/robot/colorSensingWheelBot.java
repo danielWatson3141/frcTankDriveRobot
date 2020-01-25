@@ -195,7 +195,7 @@ public class colorSensingWheelBot extends TimedRobot {
 
             if (heffectBottom.get()) {
                 extTalon.set(ControlMode.PercentOutput, 0);
-            }else{
+            } else {
                 extTalon.set(ControlMode.PercentOutput, -.2);
             }
 
@@ -264,10 +264,10 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case retract:
-            extTalon.set(ControlMode.PercentOutput, -.2);   
+            extTalon.set(ControlMode.PercentOutput, -.2);
+            ropeTalon.set(ControlMode.PercentOutput, leftStick.getY());
             if (heffectBottom.get()) {
                 extTalon.set(ControlMode.PercentOutput, 0);
-                state = drive;
             }
         }
     }
