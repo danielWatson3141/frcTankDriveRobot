@@ -283,7 +283,10 @@ public class colorSensingWheelBot extends TimedRobot {
             }
             else {
                 extTalon.set( -.2);
+            if (myController.getBButtonPressed())
+                state = drive;
             }
+            break;
         }
     }
 
