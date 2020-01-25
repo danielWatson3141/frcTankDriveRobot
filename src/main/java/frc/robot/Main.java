@@ -25,6 +25,6 @@ public final class Main {
    */
   public static void main(String... args) {
     //RobotBase.startRobot(colorSensingRobot::new);
-    RobotBase.startRobot(motorMovingRobot::new);
+    RobotBase.startRobot(colorSensingWheelBot::new);
   }
 }
