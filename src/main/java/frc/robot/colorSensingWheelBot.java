@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class colorSensingWheelBot extends TimedRobot {
     /**
@@ -87,7 +88,6 @@ public class colorSensingWheelBot extends TimedRobot {
     private TalonSRX r1Talon;
     private TalonSRX l2Talon;
     private TalonSRX r2Talon;
-    private TalonSRX extTalon;
 
     // This is the motor for spinning the spinner wheel
     private VictorSPX vex;
@@ -95,6 +95,12 @@ public class colorSensingWheelBot extends TimedRobot {
     // This is the motor for the belt and the servo motor for the ball mechanism
     private TalonSRX chain;
     private Servo ballServo;
+
+    // This is the motors and hall effect sensors for the lifter mechanisms
+    private TalonSRX extTalon;
+    private TalonSRX ropeTalon;
+    private DigitalInput heffectTop;
+    private DigitalInput heffectBottom;
 
     @Override
     public void robotInit() {
@@ -237,10 +243,23 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case extend:
-            extTalon.set(ControlMode.PercentOutput, 1);
-            //Hall effect code here
-            if (myController.getBButtonPressed()) {
-                state = drive;
+            if (heffectBottom.get()) {
+                extTalon.set(ControlMode.PercentOutput, .2);
+                if (heffectTop.get()) {
+                    extTalon.set(ControlMode.PercentOutput, 0);
+                    state = drive;
+                }
+            } else if (heffectTop.get()) {
+                extTalon.set(ControlMode.PercentOutput, -.2);
+                if (heffectBottom.get()) {
+                    extTalon.set(ControlMode.PercentOutput, 0);
+                    state = drive;
+            } else if (myController.getBButtonPressed()) {
+                extTalon.set(ControlMode.PercentOutput, -.2);
+                if (heffectBottom.get()) {
+                    extTalon.set(ControlMode.PercentOutput, 0);
+                    state = drive;
+                }
             }
             break;
         }
