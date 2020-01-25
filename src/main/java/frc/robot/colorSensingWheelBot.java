@@ -38,7 +38,9 @@ public class colorSensingWheelBot extends TimedRobot {
     private final int spin = 1;
     private final int spinT = 2;
     private final int balls = 3;
-    private final String[] states = {"DRIVE", "SPIN", "SPINT", "BALLS"};
+    private final int extend = 4;
+    private final int retract = 5;
+    private final String[] states = {"DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT"};
     
 
     // This variable stores the robot's current state
@@ -85,6 +87,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private TalonSRX r1Talon;
     private TalonSRX l2Talon;
     private TalonSRX r2Talon;
+    private TalonSRX extTalon;
 
     // This is the motor for spinning the spinner wheel
     private VictorSPX vex;
@@ -107,6 +110,7 @@ public class colorSensingWheelBot extends TimedRobot {
 
         vex = new VictorSPX(8);
         chain = new TalonSRX(5);
+
     }
 
     @Override
@@ -192,15 +196,20 @@ public class colorSensingWheelBot extends TimedRobot {
                 state = spinT;
                 break;
             }
-            else if (myController.getBButtonPressed()) {
+            else if (myController.getXButtonPressed()) {
                 state = balls;
+                break;
+            }
+            else if (myController.getStickButtonPressed(Hand.kRight))
+            {
+                state = extend;
                 break;
             }
 
             break;
         case spin:
             spin();
-            if (myController.getYButtonPressed()) {
+            if (myController.getBButtonPressed()) {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
@@ -212,7 +221,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
-            else if (myController.getBumperPressed(Hand.kLeft)) {
+            else if (myController.getBButtonPressed()) {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
@@ -226,6 +235,15 @@ public class colorSensingWheelBot extends TimedRobot {
                 chain.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
+            break;
+
+        case extend:
+            extTalon.set(ControlMode.PercentOutput, 1);
+            //Hall effect code here
+            if (myController.getBButtonPressed()) {
+                state = drive;
+            }
+            break;
         }
     }
 
