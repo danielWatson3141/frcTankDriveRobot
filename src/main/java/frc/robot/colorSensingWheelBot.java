@@ -234,6 +234,9 @@ public class colorSensingWheelBot extends TimedRobot {
         double g = c.green;
         double b = c.blue;
 
+        //This code returns a number which corresponds to one of the four colors
+        //The numbers are determined based on the RGB values that the color senors detects
+        //The equations were constructed based off of testing the RGB values of each of the four colors
         if (r > g && r > b)
             return 0;
         if (g - b > .2) {
