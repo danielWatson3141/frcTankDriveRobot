@@ -41,8 +41,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private final int balls = 3;
     private final int extend = 4;
     private final int retract = 5;
-    private final String[] states = {"DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT"};
-    
+    private final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT" };
 
     // This variable stores the robot's current state
     private int state = 0;
@@ -201,13 +200,10 @@ public class colorSensingWheelBot extends TimedRobot {
             } else if (myController.getBumperPressed(Hand.kLeft)) {
                 state = spinT;
                 break;
-            }
-            else if (myController.getXButtonPressed()) {
+            } else if (myController.getXButtonPressed()) {
                 state = balls;
                 break;
-            }
-            else if (myController.getStickButtonPressed(Hand.kRight))
-            {
+            } else if (myController.getStickButtonPressed(Hand.kRight)) {
                 state = extend;
                 break;
             }
@@ -226,8 +222,7 @@ public class colorSensingWheelBot extends TimedRobot {
             if (targetColor == dColor) {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
-            }
-            else if (myController.getBButtonPressed()) {
+            } else if (myController.getBButtonPressed()) {
                 vex.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
@@ -270,9 +265,11 @@ public class colorSensingWheelBot extends TimedRobot {
         double g = c.green;
         double b = c.blue;
 
-        //This code returns a number which corresponds to one of the four colors
-        //The numbers are determined based on the RGB values that the color senors detects
-        //The equations were constructed based off of testing the RGB values of each of the four colors
+        // This code returns a number which corresponds to one of the four colors
+        // The numbers are determined based on the RGB values that the color senors
+        // detects
+        // The equations were constructed based off of testing the RGB values of each of
+        // the four colors
         if (r > g && r > b)
             return 0;
         if (g - b > .2) {
@@ -294,7 +291,6 @@ public class colorSensingWheelBot extends TimedRobot {
 
         leftSpeed = (leftStick.getY() + leftStick.getX()) * .5;
         rightSpeed = (-leftStick.getY() + leftStick.getX()) * .5;
-        
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
         l2Talon.set(ControlMode.PercentOutput, leftSpeed);
@@ -329,4 +325,3 @@ public class colorSensingWheelBot extends TimedRobot {
         chain.set(ControlMode.PercentOutput, 1);
     }
 }
-
