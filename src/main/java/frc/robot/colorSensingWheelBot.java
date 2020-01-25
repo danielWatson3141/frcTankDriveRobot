@@ -89,7 +89,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private TalonSRX r2Talon;
 
     // This is the motor for spinning the spinner wheel
-    private VictorSPX vex;
+    private TalonSRX spinnerMotor;
 
     // This is the motor for the belt and the servo motor for the ball mechanism
     private TalonSRX chain;
@@ -108,12 +108,13 @@ public class colorSensingWheelBot extends TimedRobot {
         // m_myRobot = new DifferentialDrive(new PWMVictorSPX(0), new PWMVictorSPX(1));
         //leftStick = new Joystick(1);
 
-        l1Talon = new TalonSRX(1);
-        r1Talon = new TalonSRX(2);
-        l2Talon = new TalonSRX(3);
-        r2Talon = new TalonSRX(4);
+        l1Talon = new TalonSRX(3);
+        l2Talon = new TalonSRX(4);
 
-        vex = new VictorSPX(8);
+        r1Talon = new TalonSRX(1);
+        r2Talon = new TalonSRX(2);
+
+        spinnerMotor = new TalonSRX(8);
         chain = new TalonSRX(5);
 
         extTalon = new Talon(1);
@@ -230,7 +231,7 @@ public class colorSensingWheelBot extends TimedRobot {
         case spin:
             spin();
             if (myController.getBButtonPressed()) {
-                //vex.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
 
@@ -238,10 +239,10 @@ public class colorSensingWheelBot extends TimedRobot {
         case spinT:
             spinT();
             if (targetColor == dColor) {
-                vex.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.set(ControlMode.PercentOutput, 0);
                 state = drive;
             } else if (myController.getBButtonPressed()) {
-                vex.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.set(ControlMode.PercentOutput, 0);
                 state = drive;
             }
             break;
@@ -296,7 +297,7 @@ public class colorSensingWheelBot extends TimedRobot {
         // detects
         // The equations were constructed based off of testing the RGB values of each of
         // the four colors
-        if (r > g  && r > b)
+        if (r > g * .8  && r > b)
             return 0;
         if (g - b > .2) {
             if (r > b && g > b)
@@ -315,8 +316,8 @@ public class colorSensingWheelBot extends TimedRobot {
         double leftSpeed;
         double rightSpeed;
 
-        leftSpeed = (myController.getRawAxis(1) + myController.getRawAxis(0)) * .5;
-        rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .5;
+        leftSpeed = (myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
+        rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
         l2Talon.set(ControlMode.PercentOutput, leftSpeed);
@@ -330,7 +331,7 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spin() {
-        //vex.set(ControlMode.PercentOutput, .1);
+        spinnerMotor.set(ControlMode.PercentOutput, .1);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             currentColor++;
@@ -343,7 +344,7 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spinT() {
-        vex.set(ControlMode.PercentOutput, .1);
+        spinnerMotor.set(ControlMode.PercentOutput, .1);
     }
 
     private void balls() {
