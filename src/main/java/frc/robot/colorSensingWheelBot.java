@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.Servo;
 
 public class colorSensingWheelBot extends TimedRobot {
     /**
@@ -36,7 +37,9 @@ public class colorSensingWheelBot extends TimedRobot {
     private final int drive = 0;
     private final int spin = 1;
     private final int spinT = 2;
-    private final String[] states = {"DRIVE", "SPIN", "SPINT"};
+    private final int balls = 3;
+    private final String[] states = {"DRIVE", "SPIN", "SPINT", "BALLS"};
+    
 
     // This variable stores the robot's current state
     private int state = 0;
@@ -86,6 +89,10 @@ public class colorSensingWheelBot extends TimedRobot {
     // This is the motor for spinning the spinner wheel
     private VictorSPX vex;
 
+    // This is the motor for the belt and the servo motor for the ball mechanism
+    private TalonSRX chain;
+    private Servo ballServo;
+
     @Override
     public void robotInit() {
 
@@ -99,6 +106,7 @@ public class colorSensingWheelBot extends TimedRobot {
         r2Talon = new TalonSRX(4);
 
         vex = new VictorSPX(8);
+        chain = new TalonSRX(5);
     }
 
     @Override
@@ -184,6 +192,10 @@ public class colorSensingWheelBot extends TimedRobot {
                 state = spinT;
                 break;
             }
+            else if (myController.getBButtonPressed()) {
+                state = ballState;
+                break;
+            }
 
             break;
         case spin:
@@ -201,6 +213,14 @@ public class colorSensingWheelBot extends TimedRobot {
                 state = drive;
             }
             break;
+        case ballState:
+            ballServo.setAngle(135);
+            chain.set(ControlMode.PercentOutput, 1);
+            if (myController.getBButtonPressed()) {
+                ballServo.setAngle(0);
+                chain.set(ControlMode.PercentOutput, 0);
+                state = drive;
+            }
         }
     }
 
@@ -230,12 +250,17 @@ public class colorSensingWheelBot extends TimedRobot {
 
         leftSpeed = (leftStick.getY() + leftStick.getX()) * .5;
         rightSpeed = (-leftStick.getY() + leftStick.getX()) * .5;
+        
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
         l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
         r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+
+        if (myController.getAButton()) {
+            chain.set(ControlMode.PercentOutput, 1);
+        }
     }
 
     private void spin() {
