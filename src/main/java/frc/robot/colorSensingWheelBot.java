@@ -411,7 +411,28 @@ public class colorSensingWheelBot extends TimedRobot {
     //move at half speed
     private void move(double distance){
 
-        //metersPerSecond
+        double secondsToMove = (distance / metersPerSecond) * 2;
+        timeToQuit = (long)(System.currentTimeMillis() + secondsToMove * 1000);
+        
+        double leftSpeed, rightSpeed;
+        leftSpeed = .5;
+        rightSpeed = -.5;
+
+        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
+        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+
+        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
+        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+
+        while (System.currentTimeMillis() < timeToQuit){}
+
+        leftSpeed = rightSpeed = .0;
+
+        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
+        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+
+        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
+        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
     }
 
