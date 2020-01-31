@@ -32,6 +32,10 @@ public class fourWheelRobot extends TimedRobot {
   private TalonSRX r1Talon;
   private TalonSRX l2Talon;
   private TalonSRX r2Talon;
+
+  private long timeToQuit;
+  private long currentTime;
+
   @Override
   public void robotInit() {
 
@@ -40,9 +44,25 @@ public class fourWheelRobot extends TimedRobot {
     m_leftStick = new Joystick(0);
     // m_rightStick = new Joystick(1);
 
-    l1Talon = new WPI_TalonSRX(3);
-    r1Talon = new WPI_TalonSRX(4);
+    l1Talon = new TalonSRX(3);
+    l2Talon = new TalonSRX(4);
 
+    r1Talon = new TalonSRX(1);
+    r2Talon = new TalonSRX(2);
+  }
+
+  @Override
+  public void teleopInit() {
+    // TODO Auto-generated method stub
+
+    timeToQuit = currentTime + 1000;
+
+    super.teleopInit();
+  }
+
+  @Override
+  public void robotPeriodic() {
+    currentTime = System.currentTimeMillis();
   }
 
   @Override
@@ -55,9 +75,11 @@ public class fourWheelRobot extends TimedRobot {
     double leftSpeed;
     double rightSpeed;
 
-    leftSpeed = (m_rightStick.getY() + m_rightStick.getX()) * .5;
-    rightSpeed = (-m_rightStick.getY() + m_rightStick.getX()) * .5;
-
+    if(currentTime > timeToQuit)
+      leftSpeed = rightSpeed = 0;
+    else
+      leftSpeed = rightSpeed = .5;
+    
     l1Talon.set(ControlMode.PercentOutput, leftSpeed);
     l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 

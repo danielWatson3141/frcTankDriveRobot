@@ -101,6 +101,10 @@ public class colorSensingWheelBot extends TimedRobot {
     private DigitalInput heffectTop;
     private DigitalInput heffectBottom;
 
+    //assumed speed robot does things at maximum rate
+    private double degreesPerSecond; //max turn rate in deg/s
+    private double metersPerSecond; //max drive speed in m/s
+
     @Override
     public void robotInit() {
 
