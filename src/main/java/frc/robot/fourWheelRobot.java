@@ -32,9 +32,6 @@ public class fourWheelRobot extends TimedRobot {
   private TalonSRX r1Talon;
   private TalonSRX l2Talon;
   private TalonSRX r2Talon;
-
-  private Servo servo;
-
   @Override
   public void robotInit() {
 
@@ -43,12 +40,8 @@ public class fourWheelRobot extends TimedRobot {
     m_leftStick = new Joystick(0);
     // m_rightStick = new Joystick(1);
 
-    l1Talon = new WPI_TalonSRX(1);
-    l2Talon = new WPI_TalonSRX(2);
-    r1Talon = new WPI_TalonSRX(3);
-    r2Talon = new WPI_TalonSRX(4);
-
-    servo = new Servo(0);
+    l1Talon = new WPI_TalonSRX(3);
+    r1Talon = new WPI_TalonSRX(4);
 
   }
 
