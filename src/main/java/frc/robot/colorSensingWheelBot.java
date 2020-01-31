@@ -106,6 +106,9 @@ public class colorSensingWheelBot extends TimedRobot {
     private final double metersPerSecond = 8; //max drive speed in m/s
     private final double H = 0.1;
 
+    private long timeToQuit;
+    private long currentTime;
+
     @Override
     public void robotInit() {
 
@@ -187,6 +190,7 @@ public class colorSensingWheelBot extends TimedRobot {
         SmartDashboard.putNumber("leftStickX", myController.getRawAxis(0));
         SmartDashboard.putNumber("leftStickY",  myController.getRawAxis(1));
         
+        currentTime = System.currentTimeMillis();
     }
 
     // This method is called about 10 times per second while the robot is set to
@@ -372,12 +376,42 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     //theta: degrees
+    //turn at half speed
     private void turn(double theta){
+
+        //degreesPerSecond
+        double secondsToTurn = (theta / degreesPerSecond) * 2;
+
+        timeToQuit = (long)(System.currentTimeMillis() + secondsToTurn * 1000);
+
+        double leftSpeed, rightSpeed;
+        leftSpeed = rightSpeed = .5;
+
+        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
+        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+
+        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
+        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        
+        while (System.currentTimeMillis() < timeToQuit){}
+
+        leftSpeed = rightSpeed = .0;
+
+        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
+        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+
+        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
+        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        
+
 
     }
 
     //distance: meters
+    //move at half speed
     private void move(double distance){
+
+        //metersPerSecond
 
     }
 
