@@ -101,6 +101,8 @@ public class colorSensingWheelBot extends TimedRobot {
     private DigitalInput heffectTop;
     private DigitalInput heffectBottom;
 
+    private final double H = 0.1;
+
     @Override
     public void robotInit() {
 
@@ -357,8 +359,13 @@ public class colorSensingWheelBot extends TimedRobot {
         chain.set(ControlMode.PercentOutput, 1);
     }
 
-    private void deposit() {
-
+    private void deposit(double distance, double theta) {
+        double xd = distance*Math.cos(theta);
+        double yd = distance*Math.sin(theta) - H;
+        turn(theta);
+        move(xd);
+        turn(90*(-Math.signum(theta)));
+        move(yd);
     }
 
     //theta: degrees
