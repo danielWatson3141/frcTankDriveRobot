@@ -277,12 +277,31 @@ public class colorSensingWheelBot extends TimedRobot {
         double g = c.green;
         double b = c.blue;
 
+
+
         // This code returns a number which corresponds to one of the four colors
         // The numbers are determined based on the RGB values that the color senors
         // detects
         // The equations were constructed based off of testing the RGB values of each of
         // the four colors
-        if (r > g && r > b)
+
+        // 0 = r
+        // 1 = y
+        // 2 = b
+        // 3 = g
+
+        //blue - good
+        //green is good
+        //red is yellowish
+        //yellow is good
+
+        //red
+        //r .34
+        //g .42
+        //b .21
+        
+
+        if (r > g  && r > b)
             return 0;
         if (g - b > .2) {
             if (r > b && g > b)
@@ -336,4 +355,20 @@ public class colorSensingWheelBot extends TimedRobot {
         ballServo.setAngle(135);
         chain.set(ControlMode.PercentOutput, 1);
     }
+
+    private void deposit() {
+        
+    }
+
+    //theta: degrees
+    private void turn(double theta){
+
+    }
+
+    //distance: meters
+    private void move(double distance){
+
+    }
+
+
 }
