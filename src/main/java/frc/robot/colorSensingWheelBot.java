@@ -102,8 +102,9 @@ public class colorSensingWheelBot extends TimedRobot {
     private DigitalInput heffectBottom;
 
     //assumed speed robot does things at maximum rate
-    private double degreesPerSecond; //max turn rate in deg/s
-    private double metersPerSecond; //max drive speed in m/s
+    private final double degreesPerSecond = 270; //max turn rate in deg/s
+    private final double metersPerSecond = 8; //max drive speed in m/s
+    private final double H = 0.1;
 
     @Override
     public void robotInit() {
@@ -361,8 +362,13 @@ public class colorSensingWheelBot extends TimedRobot {
         chain.set(ControlMode.PercentOutput, 1);
     }
 
-    private void deposit() {
-
+    private void deposit(double distance, double theta) {
+        double xd = distance*Math.cos(theta);
+        double yd = distance*Math.sin(theta) - H;
+        turn(theta);
+        move(xd);
+        turn(90*(-Math.signum(theta)));
+        move(yd);
     }
 
     //theta: degrees
