@@ -55,7 +55,7 @@ public class fourWheelRobot extends TimedRobot {
   public void teleopInit() {
     // TODO Auto-generated method stub
 
-    timeToQuit = currentTime + 1000;
+    timeToQuit = currentTime + 5000;
 
     super.teleopInit();
   }

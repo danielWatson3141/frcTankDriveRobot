@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -89,7 +90,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private TalonSRX r2Talon;
 
     // This is the motor for spinning the spinner wheel
-    private TalonSRX spinnerMotor;
+    private PWM spinnerMotor;
 
     // This is the motor for the belt and the servo motor for the ball mechanism
     private TalonSRX chain;
@@ -117,15 +118,15 @@ public class colorSensingWheelBot extends TimedRobot {
         //leftStick = new Joystick(1);
 
         l1Talon = new TalonSRX(3);
-        l2Talon = new TalonSRX(4);
+        //l2Talon = new TalonSRX(4);
 
-        r1Talon = new TalonSRX(1);
-        r2Talon = new TalonSRX(2);
+        r1Talon = new TalonSRX(3);
+        //r2Talon = new TalonSRX(4);
 
-        spinnerMotor = new TalonSRX(8);
+        spinnerMotor = new PWM(1);
         chain = new TalonSRX(5);
 
-        extTalon = new Talon(1);
+        extTalon = new Talon(5);
         ropeTalon = new Talon(3);
         heffectTop = new DigitalInput(0);
         heffectBottom = new DigitalInput(1);
@@ -215,9 +216,9 @@ public class colorSensingWheelBot extends TimedRobot {
             drive();
 
             if (!heffectBottom.get()) {
-                extTalon.set( 0);
+                //extTalon.set( 0);
             } else {
-                extTalon.set(-.2);
+                //extTalon.set(-.2);
             }
 
             if (myController.getYButtonPressed()) {
@@ -240,7 +241,7 @@ public class colorSensingWheelBot extends TimedRobot {
         case spin:
             spin();
             if (myController.getBButtonPressed()) {
-                spinnerMotor.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.setSpeed(0);
                 state = drive;
             }
 
@@ -248,10 +249,10 @@ public class colorSensingWheelBot extends TimedRobot {
         case spinT:
             spinT();
             if (targetColor == dColor) {
-                spinnerMotor.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.setSpeed(0);
                 state = drive;
             } else if (myController.getBButtonPressed()) {
-                spinnerMotor.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.setSpeed(0);
                 state = drive;
             }
             break;
@@ -334,10 +335,10 @@ public class colorSensingWheelBot extends TimedRobot {
         rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+        //l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        //r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
         if (myController.getAButton()) {
             chain.set(ControlMode.PercentOutput, 1);
@@ -345,20 +346,22 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spin() {
-        spinnerMotor.set(ControlMode.PercentOutput, .1);
+        spinnerMotor.setSpeed(.20);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
+            SmartDashboard.putNumber("sectorCount", sectorCount);
             currentColor++;
             currentColor %= 4;
         }
         if (sectorCount == 28) {
             state = drive;
+            spinnerMotor.setSpeed(0);
         }
 
     }
 
     private void spinT() {
-        spinnerMotor.set(ControlMode.PercentOutput, .1);
+        spinnerMotor.setSpeed(.15);
     }
 
     private void balls() {
@@ -388,20 +391,20 @@ public class colorSensingWheelBot extends TimedRobot {
         leftSpeed = rightSpeed = .5;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+        //l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        //r2Talon.set(ControlMode.PercentOutput, rightSpeed);
         
         while (System.currentTimeMillis() < timeToQuit){}
 
         leftSpeed = rightSpeed = .0;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+        //l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        //r2Talon.set(ControlMode.PercentOutput, rightSpeed);
         
 
 
@@ -419,20 +422,20 @@ public class colorSensingWheelBot extends TimedRobot {
         rightSpeed = -.5;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+        //l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        //r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
         while (System.currentTimeMillis() < timeToQuit){}
 
         leftSpeed = rightSpeed = .0;
 
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
+        //l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        //r2Talon.set(ControlMode.PercentOutput, rightSpeed);
 
     }
 
