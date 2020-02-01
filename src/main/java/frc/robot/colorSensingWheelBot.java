@@ -107,9 +107,9 @@ public class colorSensingWheelBot extends TimedRobot {
 
     // This is network table data for the limelight
     private NetworkTable table;
-    private NetworkTableEntry entryX;
-    private NetworkTableEntry entryY;
-    private NetworkTableEntry entryA;
+    private NetworkTableEntry tx;
+    private NetworkTableEntry ty;
+    private NetworkTableEntry ta;
     private double xPos;
     private double yPos;
     private double area;
@@ -146,12 +146,12 @@ public class colorSensingWheelBot extends TimedRobot {
         ballServo = new Servo(2);
 
         table = NetworkTableInstance.getDefault().getTable("Limelight");
-        entryX = table.getEntry("entryX");
-        entryY = table.getEntry("entryY");
-        entryA = table.getEntry("entryA");
-        xPos = entryX.getDouble(0.0);
-        yPos = entryY.getDouble(0.0);
-        area = entryA.getDouble(0.0);
+        tx = table.getEntry("tx");
+        ty = table.getEntry("ty");
+        ta = table.getEntry("ta");
+        xPos = tx.getDouble(0.0);
+        yPos = ty.getDouble(0.0);
+        area = ta.getDouble(0.0);
 
     }
 
