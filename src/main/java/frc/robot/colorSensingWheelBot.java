@@ -110,12 +110,9 @@ public class colorSensingWheelBot extends TimedRobot {
 
     // This is network table data for the limelight
     private NetworkTable table;
-    private NetworkTableEntry entryX;
-    private NetworkTableEntry entryY;
-    private NetworkTableEntry entryA;
-    private double xPos;
-    private double yPos;
-    private double area;
+    private NetworkTableEntry tx;
+    private NetworkTableEntry ty;
+    private NetworkTableEntry ta;
 
     //assumed speed robot does things at maximum rate
     private final double degreesPerSecond = 270; //max turn rate in deg/s
@@ -161,13 +158,11 @@ public class colorSensingWheelBot extends TimedRobot {
 
         ballServo = new Servo(2);
 
-        table = NetworkTableInstance.getDefault().getTable("Limelight");
-        entryX = table.getEntry("entryX");
-        entryY = table.getEntry("entryY");
-        entryA = table.getEntry("entryA");
-        xPos = entryX.getDouble(0.0);
-        yPos = entryY.getDouble(0.0);
-        area = entryA.getDouble(0.0);
+        table = NetworkTableInstance.getDefault().getTable("limelight");
+        tx = table.getEntry("tx");
+        ty = table.getEntry("ty");
+        ta = table.getEntry("ta");
+        
 
         enc = new Encoder(0, 1);
 
@@ -236,6 +231,9 @@ public class colorSensingWheelBot extends TimedRobot {
         currentTime = System.currentTimeMillis();
 
         // Provides smartboard data for the limelight
+        double xPos = tx.getDouble(0.0);
+        double yPos = ty.getDouble(0.0);
+        double area = ta.getDouble(0.0);
         SmartDashboard.putNumber("LimelightX", xPos);
         SmartDashboard.putNumber("LimelightY", yPos);
         SmartDashboard.putNumber("LimelightArea", area);
