@@ -304,8 +304,6 @@ public class colorSensingWheelBot extends TimedRobot {
         double g = c.green;
         double b = c.blue;
 
-
-
         // This code returns a number which corresponds to one of the four colors
         // The numbers are determined based on the RGB values that the color senors
         // detects
@@ -333,11 +331,7 @@ public class colorSensingWheelBot extends TimedRobot {
         leftSpeed = (myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
         rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
 
-        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
-
-        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        setWheelSpeed(leftSpeed, rightSpeed);
 
         if (myController.getAButton()) {
             chain.set(ControlMode.PercentOutput, 1);
@@ -387,24 +381,12 @@ public class colorSensingWheelBot extends TimedRobot {
         double leftSpeed, rightSpeed;
         leftSpeed = rightSpeed = .5;
 
-        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
-
-        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        setWheelSpeed(leftSpeed, rightSpeed);
         
         while (System.currentTimeMillis() < timeToQuit){}
 
         leftSpeed = rightSpeed = .0;
-
-        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
-
-        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
-        
-
-
+        setWheelSpeed(leftSpeed, rightSpeed);
     }
 
     //distance: meters
@@ -418,22 +400,22 @@ public class colorSensingWheelBot extends TimedRobot {
         leftSpeed = .5;
         rightSpeed = -.5;
 
-        l1Talon.set(ControlMode.PercentOutput, leftSpeed);
-        l2Talon.set(ControlMode.PercentOutput, leftSpeed);
-
-        r1Talon.set(ControlMode.PercentOutput, rightSpeed);
-        r2Talon.set(ControlMode.PercentOutput, rightSpeed);
+        setWheelSpeed(leftSpeed, rightSpeed);
 
         while (System.currentTimeMillis() < timeToQuit){}
 
         leftSpeed = rightSpeed = .0;
 
+        setWheelSpeed(leftSpeed, rightSpeed);
+
+    }
+
+    void setWheelSpeed(double leftSpeed, double rightSpeed){
         l1Talon.set(ControlMode.PercentOutput, leftSpeed);
         l2Talon.set(ControlMode.PercentOutput, leftSpeed);
 
         r1Talon.set(ControlMode.PercentOutput, rightSpeed);
         r2Talon.set(ControlMode.PercentOutput, rightSpeed);
-
     }
 
 
