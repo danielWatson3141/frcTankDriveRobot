@@ -9,13 +9,16 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorSensorV3;
+import com.ctre.phoenix.motorcontrol.can.T
 
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Talon;
@@ -23,9 +26,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+
+
 
 public class colorSensingWheelBot extends TimedRobot {
     /**
@@ -122,6 +125,18 @@ public class colorSensingWheelBot extends TimedRobot {
     private long timeToQuit;
     private long currentTime;
 
+    Encoder enc;
+
+    // count per revolution for Encoder
+    private static final double cpr = 360;
+
+    //diameter of wheels
+    private static final double whd = .1524;
+
+    //half distance between the wheels
+    private static final double wheelRadius = .381;
+
+
     @Override
     public void robotInit() {
 
@@ -130,13 +145,14 @@ public class colorSensingWheelBot extends TimedRobot {
         //leftStick = new Joystick(1);
 
         l1Talon = new TalonSRX(3);
-        //l2Talon = new TalonSRX(4);
+        l2Talon = new TalonSRX(4);
 
         r1Talon = new TalonSRX(3);
-        //r2Talon = new TalonSRX(4);
+        r2Talon = new TalonSRX(4);
 
         spinnerMotor = new PWM(1);
         chain = new TalonSRX(5);
+
 
         extTalon = new Talon(5);
         ropeTalon = new Talon(3);
@@ -152,6 +168,9 @@ public class colorSensingWheelBot extends TimedRobot {
         xPos = entryX.getDouble(0.0);
         yPos = entryY.getDouble(0.0);
         area = entryA.getDouble(0.0);
+
+        enc = new Encoder(0, 1);
+
 
     }
 
@@ -296,7 +315,7 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case extend:
-            drive();F
+            drive();
             if (!heffectTop.get()) {
                 extTalon.set(0);
                 //state = drive;
@@ -357,8 +376,8 @@ public class colorSensingWheelBot extends TimedRobot {
         double leftSpeed;
         double rightSpeed;
 
-        leftSpeed = (myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
-        rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .0;
+        leftSpeed = (myController.getRawAxis(1) + myController.getRawAxis(0)) * .5;
+        rightSpeed = (-myController.getRawAxis(1) + myController.getRawAxis(0)) * .5;
 
         setWheelSpeed(leftSpeed, rightSpeed);
 
@@ -409,17 +428,18 @@ public class colorSensingWheelBot extends TimedRobot {
     //turn at half speed
     private void turn(double theta){
 
-        //degreesPerSecond
-        double secondsToTurn = (theta / degreesPerSecond) * 2;
-
-        timeToQuit = (long)(System.currentTimeMillis() + secondsToTurn * 1000);
-
+        double totalDistance = 0;
         double leftSpeed, rightSpeed;
-        leftSpeed = rightSpeed = .5;
+        distanceTravelled(Hand.kLeft);
 
+        leftSpeed = rightSpeed = Math.signum(theta) * .5;
         setWheelSpeed(leftSpeed, rightSpeed);
-        
-        while (System.currentTimeMillis() < timeToQuit){}
+
+        double distance = theta * wheelRadius * Math.PI / 180;
+
+        while(totalDistance < distance){
+            totalDistance += distanceTravelled(Hand.kLeft);
+        }
 
         leftSpeed = rightSpeed = .0;
         setWheelSpeed(leftSpeed, rightSpeed);
@@ -428,22 +448,19 @@ public class colorSensingWheelBot extends TimedRobot {
     //distance: meters
     //move at half speed
     private void move(double distance){
-
-        double secondsToMove = (distance / metersPerSecond) * 2;
-        timeToQuit = (long)(System.currentTimeMillis() + secondsToMove * 1000);
-        
+        double totalDistance = 0;
         double leftSpeed, rightSpeed;
-        leftSpeed = .5;
-        rightSpeed = -.5;
-
+        distanceTravelled(Hand.kLeft);
+        leftSpeed = .5 * Math.signum(distance);
+        rightSpeed = -.5 * Math.signum(distance);
         setWheelSpeed(leftSpeed, rightSpeed);
 
-        while (System.currentTimeMillis() < timeToQuit){}
+        while(totalDistance < distance){
+            totalDistance += distanceTravelled(Hand.kLeft);
+        }
 
         leftSpeed = rightSpeed = .0;
-
         setWheelSpeed(leftSpeed, rightSpeed);
-
     }
 
     void setWheelSpeed(double leftSpeed, double rightSpeed){
@@ -453,5 +470,8 @@ public class colorSensingWheelBot extends TimedRobot {
         r2Talon.set(ControlMode.PercentOutput, rightSpeed);
     }
 
-
+    //returns distance travelled since last call
+    double distanceTravelled(Hand side){
+        return 0;
+    }
 }
