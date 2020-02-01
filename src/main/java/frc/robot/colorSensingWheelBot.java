@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class colorSensingWheelBot extends TimedRobot {
     /**
@@ -101,6 +104,15 @@ public class colorSensingWheelBot extends TimedRobot {
     private DigitalInput heffectTop;
     private DigitalInput heffectBottom;
 
+    // This is network table data for the limelight
+    private NetworkTable table;
+    private NetworkTableEntry entryX;
+    private NetworkTableEntry entryY;
+    private NetworkTableEntry entryA;
+    private double xPos;
+    private double yPos;
+    private double area;
+
     //assumed speed robot does things at maximum rate
     private final double degreesPerSecond = 270; //max turn rate in deg/s
     private final double metersPerSecond = 8; //max drive speed in m/s
@@ -131,6 +143,14 @@ public class colorSensingWheelBot extends TimedRobot {
         heffectBottom = new DigitalInput(1);
 
         ballServo = new Servo(2);
+
+        table = NetworkTableInstance.getDefault().getTable("Limelight");
+        entryX = table.getEntry("entryX");
+        entryY = table.getEntry("entryY");
+        entryA = table.getEntry("entryA");
+        xPos = entryX.getDouble(0.0);
+        yPos = entryY.getDouble(0.0);
+        area = entryA.getDouble(0.0);
 
     }
 
@@ -191,6 +211,11 @@ public class colorSensingWheelBot extends TimedRobot {
         SmartDashboard.putNumber("leftStickY",  myController.getRawAxis(1));
         
         currentTime = System.currentTimeMillis();
+
+        // Provides smartboard data for the limelight
+        SmartDashboard.putNumber("LimelightX", xPos);
+        SmartDashboard.putNumber("LimelightY", yPos);
+        SmartDashboard.putNumber("LimelightArea", area);
     }
 
     // This method is called about 10 times per second while the robot is set to
