@@ -7,10 +7,10 @@
 
 package frc.robot;
 
+import com.analog.adis16470.frc.ADIS16470_IMU;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
-import com.ctre.phoenix.motorcontrol.can.T
 
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -25,12 +25,30 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 
 public class colorSensingWheelBot extends TimedRobot {
+
+    // possible ICU code
+    private static final String kDefaultAuto = "Default";
+    private static final String kCustomAuto = "My Auto";
+    private String m_autoSelected;
+    private static final String kYawDefault = "Z-Axis";
+    private static final String kYawXAxis = "X-Axis";
+    private static final String kYawYAxis = "Y-Axis";
+    private String m_yawSelected;
+    private ADIS16470_IMU.IMUAxis m_yawActiveAxis;
+    private final SendableChooser<String> m_yawChooser = new SendableChooser<>();
+    private boolean m_runCal = false;
+    private boolean m_configCal = false;
+    private boolean m_reset = false;
+    private boolean m_setYawAxis = false;
+    private final ADIS16470_IMU m_imu = new ADIS16470_IMU();
+
     /**
      * Change the I2C port below to match the connection of your color sensor
      */
@@ -79,6 +97,13 @@ public class colorSensingWheelBot extends TimedRobot {
     private final String blue = "BLUE";
     private final String green = "GREEN";
 
+    private final int RED = 0;
+    private final int YELLOW = 0;
+    private final int BLUE = 0;
+    private final int GREEN = 0;
+
+
+
     // an array for converting int to string and back
     private final String[] colors = { red, yellow, blue, green };
 
@@ -109,10 +134,10 @@ public class colorSensingWheelBot extends TimedRobot {
     private DigitalInput heffectBottom;
 
     // This is network table data for the limelight
-    private NetworkTable table;
-    private NetworkTableEntry tx;
-    private NetworkTableEntry ty;
-    private NetworkTableEntry ta;
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
 
     //assumed speed robot does things at maximum rate
     private final double degreesPerSecond = 270; //max turn rate in deg/s
@@ -132,6 +157,8 @@ public class colorSensingWheelBot extends TimedRobot {
 
     //half distance between the wheels
     private static final double wheelRadius = .381;
+
+    public static final ADIS16470_IMU imu = new ADIS16470_IMU();
 
 
     @Override
@@ -158,13 +185,16 @@ public class colorSensingWheelBot extends TimedRobot {
 
         ballServo = new Servo(2);
 
-        table = NetworkTableInstance.getDefault().getTable("limelight");
-        tx = table.getEntry("tx");
-        ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
-        
+        m_yawChooser.setDefaultOption("Z-Axis", kYawDefault);
+        m_yawChooser.addOption("X-Axis", kYawXAxis);
+        m_yawChooser.addOption("Y-Axis", kYawYAxis);
+        SmartDashboard.putData("IMUYawAxis", m_yawChooser);
+        SmartDashboard.putBoolean("RunCal", false);
+        SmartDashboard.putBoolean("ConfigCal", false);
+        SmartDashboard.putBoolean("Reset", false);
+        SmartDashboard.putBoolean("SetYawAxis", false);
 
-        enc = new Encoder(0, 1);
+        //enc = new Encoder(0, 1);
 
 
     }
@@ -234,9 +264,49 @@ public class colorSensingWheelBot extends TimedRobot {
         double xPos = tx.getDouble(0.0);
         double yPos = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
+
         SmartDashboard.putNumber("LimelightX", xPos);
         SmartDashboard.putNumber("LimelightY", yPos);
         SmartDashboard.putNumber("LimelightArea", area);
+
+        SmartDashboard.putNumber("YawAngle", m_imu.getAngle());
+        SmartDashboard.putNumber("XCompAngle", m_imu.getXComplementaryAngle());
+        SmartDashboard.putNumber("YCompAngle", m_imu.getYComplementaryAngle());
+        m_runCal = SmartDashboard.getBoolean("RunCal", false);
+        m_configCal = SmartDashboard.getBoolean("ConfigCal", false);
+        m_reset = SmartDashboard.getBoolean("Reset", false);
+        m_setYawAxis = SmartDashboard.getBoolean("SetYawAxis", false);
+        m_yawSelected = m_yawChooser.getSelected();
+    
+        // Set IMU settings
+        if (m_configCal) {
+          m_imu.configCalTime(ADIS16470_IMU.ADIS16470CalibrationTime._8s);
+          m_configCal = SmartDashboard.putBoolean("ConfigCal", false);
+        }
+        if (m_reset) {
+          m_imu.reset();
+          m_reset = SmartDashboard.putBoolean("Reset", false);
+        }
+        if (m_runCal) {
+          m_imu.calibrate();
+          m_runCal = SmartDashboard.putBoolean("RunCal", false);
+        }
+        
+        // Read the desired yaw axis from the dashboard
+        if (m_yawSelected == "X-Axis") {
+          m_yawActiveAxis = ADIS16470_IMU.IMUAxis.kX;
+        }
+        else if (m_yawSelected == "Y-Axis") {
+          m_yawActiveAxis = ADIS16470_IMU.IMUAxis.kY;
+        }
+        else {
+          m_yawActiveAxis = ADIS16470_IMU.IMUAxis.kZ;
+        }
+        // Set the desired yaw axis from the dashboard
+        if (m_setYawAxis) {
+          m_imu.setYawAxis(m_yawActiveAxis);
+          m_setYawAxis = SmartDashboard.putBoolean("SetYawAxis", false);
+        }
     }
 
     // This method is called about 10 times per second while the robot is set to
@@ -357,7 +427,7 @@ public class colorSensingWheelBot extends TimedRobot {
         // the four colors
         if (r > g * .8  && r > b)
             return 0;
-        if (g - b > .2) {
+        if (g - b > .25) {
             if (r > b && g > b)
                 return 1;
             return 3;
@@ -385,7 +455,7 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spin() {
-        spinnerMotor.setSpeed(.20);
+        spinnerMotor.setSpeed(.30);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             SmartDashboard.putNumber("sectorCount", sectorCount);
@@ -400,7 +470,7 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     private void spinT() {
-        spinnerMotor.setSpeed(.15);
+        spinnerMotor.setSpeed(.25);
         if (dColor == (currentColor + 1) % 4) {
             SmartDashboard.putString("currentColor", colors[currentColor]);
             currentColor++;
