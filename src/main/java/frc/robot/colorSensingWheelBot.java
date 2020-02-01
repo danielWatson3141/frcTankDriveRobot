@@ -252,7 +252,6 @@ public class colorSensingWheelBot extends TimedRobot {
                 targetColor = 0;
             }
         }
-
         // This section controls state behavior. It defines state transitions and
         // initializations
         switch (state) {
@@ -267,19 +266,16 @@ public class colorSensingWheelBot extends TimedRobot {
             }
 
             if (myController.getYButtonPressed()) {
-                state = spin;
-                sectorCount = 0;
-                currentColor = dColor;
+                changeState(spin);
                 break;
             } else if (myController.getBumperPressed(Hand.kLeft)) {
-                state = spinT;
-                currentColor = dColor;
+                changeState(spinT);;
                 break;
             } else if (myController.getXButtonPressed()) {
-                state = balls;
+                changeState(balls);
                 break;
             } else if (myController.getStickButtonPressed(Hand.kRight)) {
-                state = extend;
+                changeState(extend);;
                 break;
             }
 
@@ -287,28 +283,24 @@ public class colorSensingWheelBot extends TimedRobot {
         case spin:
             spin();
             if (myController.getBButtonPressed()) {
-                spinnerMotor.setSpeed(0);
-                state = drive;
+                changeState(drive);
             }
 
             break;
         case spinT:
             spinT();
             if (targetColor == currentColor) {
-                spinnerMotor.setSpeed(0);
-                state = drive;
+                changeState(drive);
             } else if (myController.getBButtonPressed()) {
-                spinnerMotor.setSpeed(0);
-                state = drive;
+                changeState(drive);
             }
             break;
 
         case balls:
             balls();
+            drive();
             if (myController.getBButtonPressed()) {
-                ballServo.setAngle(0);
-                chain.set(ControlMode.PercentOutput, 0);
-                state = drive;
+                changeState(drive);
             }
             break;
 
@@ -316,17 +308,16 @@ public class colorSensingWheelBot extends TimedRobot {
             drive();
             if (!heffectTop.get()) {
                 extTalon.set(0);
-                //state = drive;
             } else {
                 extTalon.set(.2);
             }
 
             if (myController.getBButtonPressed()) {
-                state = drive;
+                changeState(drive);
             }
 
             if(myController.getStickButtonPressed(Hand.kRight)){
-                state = retract;
+                changeState(retract);
             }
 
             break;
@@ -339,10 +330,37 @@ public class colorSensingWheelBot extends TimedRobot {
             else {
                 extTalon.set( -.2);
             if (myController.getBButtonPressed())
-                state = drive;
+                changeState(drive);
             }
             break;
         }
+    }
+
+    private void changeState(int toState){
+        resetButtons();
+
+        switch(toState){
+            case spin:
+                sectorCount = 0;
+                currentColor = dColor;
+                break;
+            case spinT:
+                currentColor = dColor;
+                break;
+            case balls:
+                break;
+            case drive:
+                ballServo.setAngle(0);
+                chain.set(ControlMode.PercentOutput, 0);
+                spinnerMotor.setSpeed(0);
+                break;
+        }
+        state = toState;
+    }
+
+    private void resetButtons(){
+        for(int i=1; i<=10; i++)
+            myController.getRawButtonPressed(i);
     }
 
     private int ColorToInt(Color c) {
