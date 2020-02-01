@@ -82,9 +82,9 @@ public class colorSensingWheelBot extends TimedRobot {
     // The color that the user has designated the target color
     private int targetColor = 0;
 
+    // The color detected by the sensor
     private int dColor;
-
-    
+    private int prevDColor;
 
     // These are the two motors characteristic of a treadbot
     private TalonSRX l1Talon;
@@ -171,7 +171,10 @@ public class colorSensingWheelBot extends TimedRobot {
         detectedColor = m_colorSensor.getColor();
 
         // convert the detected color to an int
+
         dColor = ColorToInt(detectedColor);
+
+        
 
         // show the detected color on the dashboard
         SmartDashboard.putString("detected Color", colors[dColor]);
@@ -253,6 +256,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 break;
             } else if (myController.getBumperPressed(Hand.kLeft)) {
                 state = spinT;
+                currentColor = dColor;
                 break;
             } else if (myController.getXButtonPressed()) {
                 state = balls;
@@ -273,7 +277,7 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
         case spinT:
             spinT();
-            if (targetColor == dColor) {
+            if (targetColor == currentColor) {
                 spinnerMotor.setSpeed(0);
                 state = drive;
             } else if (myController.getBButtonPressed()) {
@@ -292,7 +296,7 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case extend:
-            drive();
+            drive();F
             if (!heffectTop.get()) {
                 extTalon.set(0);
                 //state = drive;
@@ -311,7 +315,6 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case retract:
-            
             ropeTalon.set(myController.getRawAxis(1));
             if (!heffectBottom.get()) {
                 extTalon.set(0);
@@ -381,6 +384,11 @@ public class colorSensingWheelBot extends TimedRobot {
 
     private void spinT() {
         spinnerMotor.setSpeed(.15);
+        if (dColor == (currentColor + 1) % 4) {
+            SmartDashboard.putString("currentColor", colors[currentColor]);
+            currentColor++;
+            currentColor %= 4;
+        }
     }
 
     private void balls() {
