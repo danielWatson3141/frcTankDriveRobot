@@ -8,16 +8,16 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
-import com.ctre.phoenix.motorcontrol.can.T
-
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 
@@ -87,7 +86,6 @@ public class colorSensingWheelBot extends TimedRobot {
 
     // The color detected by the sensor
     private int dColor;
-    private int prevDColor;
 
     // These are the two motors characteristic of a treadbot
     private TalonSRX l1Talon;
@@ -114,13 +112,7 @@ public class colorSensingWheelBot extends TimedRobot {
     private NetworkTableEntry ty;
     private NetworkTableEntry ta;
 
-    //assumed speed robot does things at maximum rate
-    private final double degreesPerSecond = 270; //max turn rate in deg/s
-    private final double metersPerSecond = 8; //max drive speed in m/s
     private final double H = 0.1;
-
-    private long timeToQuit;
-    private long currentTime;
 
     Encoder enc;
 
@@ -147,12 +139,22 @@ public class colorSensingWheelBot extends TimedRobot {
         r1Talon = new TalonSRX(3);
         r2Talon = new TalonSRX(4);
 
+        
+        l1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
         spinnerMotor = new PWM(1);
+
+        //motor for ball grabber
         chain = new TalonSRX(5);
 
-
+        //motor that extends arm
         extTalon = new Talon(5);
+
+        //motor that retracts rope
         ropeTalon = new Talon(3);
+
+        //sensors that tell us if we're at the top or bottom of the shaft
         heffectTop = new DigitalInput(0);
         heffectBottom = new DigitalInput(1);
 
@@ -168,6 +170,8 @@ public class colorSensingWheelBot extends TimedRobot {
 
 
     }
+
+    static long currentTime;
 
     @Override
     public void robotPeriodic() {
@@ -237,6 +241,8 @@ public class colorSensingWheelBot extends TimedRobot {
         SmartDashboard.putNumber("LimelightX", xPos);
         SmartDashboard.putNumber("LimelightY", yPos);
         SmartDashboard.putNumber("LimelightArea", area);
+
+        accumulate();
     }
 
     // This method is called about 10 times per second while the robot is set to
@@ -252,12 +258,13 @@ public class colorSensingWheelBot extends TimedRobot {
                 targetColor = 0;
             }
         }
+
+        drive();
         // This section controls state behavior. It defines state transitions and
         // initializations
         switch (state) {
 
         case drive:
-            drive();
 
             if (!heffectBottom.get()) {
                 //extTalon.set( 0);
@@ -298,14 +305,12 @@ public class colorSensingWheelBot extends TimedRobot {
 
         case balls:
             balls();
-            drive();
             if (myController.getBButtonPressed()) {
                 changeState(drive);
             }
             break;
 
         case extend:
-            drive();
             if (!heffectTop.get()) {
                 extTalon.set(0);
             } else {
@@ -323,8 +328,8 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
 
         case retract:
-            ropeTalon.set(myController.getRawAxis(1));
-            if (!heffectBottom.get()) {
+            ropeTalon.set(myController.getRawAxis(5));
+            if (!heffectBottom.get()) { // TODO: revise sensor name
                 extTalon.set(0);
             }
             else {
@@ -438,6 +443,7 @@ public class colorSensingWheelBot extends TimedRobot {
         move(xd);
         turn(90*(-Math.signum(theta)));
         move(yd);
+        changeState(balls);
     }
 
     //theta: degrees
@@ -473,6 +479,7 @@ public class colorSensingWheelBot extends TimedRobot {
 
         while(totalDistance < distance){
             totalDistance += distanceTravelled(Hand.kLeft);
+            SmartDashboard.putNumber("distance travelled", totalDistance);
         }
 
         leftSpeed = rightSpeed = .0;
@@ -488,6 +495,56 @@ public class colorSensingWheelBot extends TimedRobot {
 
     //returns distance travelled since last call
     double distanceTravelled(Hand side){
-        return 0;
+        double result;
+        if(side == Hand.kLeft){
+            result = laccumulator;
+            laccumulator = 0;
+        }else
+        {
+            result = raccumulator;
+            raccumulator = 0;
+        }
+        return result;
+    }
+
+    double laccumulator = 0;
+    double raccumulator = 0;
+    long previousTime = 0;
+    static double gearRatio = 1 / 6.0 ;
+
+    void accumulate(){
+        double dt;
+        long currentTime;
+        if(previousTime == 0){
+            dt = 0;
+        }
+        else{
+            currentTime = System.currentTimeMillis();
+            dt = (currentTime - previousTime) / 1000.0;
+            previousTime = currentTime;
+        }
+
+        laccumulator += dt * rotationRate(Hand.kLeft) * wheelRadius * gearRatio;
+        raccumulator += dt * rotationRate(Hand.kRight) * wheelRadius * gearRatio;
+        SmartDashboard.putNumber("Left Accumulator", laccumulator);
+        
+    }
+
+    static double unitsPerRotation = 360;
+    static double unitsPerRadian = unitsPerRotation / (2*Math.PI);
+
+    //radians / sec
+    double rotationRate(Hand side){
+
+        double unitsPers;
+        if( side == Hand.kLeft){
+            unitsPers =  l1Talon.getSelectedSensorVelocity(0)*10;
+        }else{
+            unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
+        }
+
+        SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
+
+        return unitsPers / unitsPerRadian;
     }
 }
