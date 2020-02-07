@@ -93,13 +93,8 @@ public class spinnerSystem extends Subsystem {
         SmartDashboard.putNumber("Red", detectedColor.red);
         SmartDashboard.putNumber("Green", detectedColor.green);
         SmartDashboard.putNumber("Blue", detectedColor.blue);
-        SmartDashboard.putNumber("IR", IR);
         SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
         SmartDashboard.putString("Target Color", colors[targetColor]);
-
-        proximity = m_colorSensor.getProximity();
-
-        SmartDashboard.putNumber("Proximity", proximity);
 
         // this allows the driver to switch the target color
         if (controller.getBumperPressed(Hand.kRight)) {

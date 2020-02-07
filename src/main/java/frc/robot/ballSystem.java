@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj.Servo;
 public class ballSystem extends Subsystem {
 
     // This is the motor for the belt and the servo motor for the ball mechanism
-    private TalonSRX chain;
+    private TalonSRX belt;
     private Servo ballServo;
+    private static final double servoOffsetAngle = 0;
 
     public ballSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
 
         // motor for ball grabber
-        chain = new TalonSRX(5);
+        belt = new TalonSRX(5);
 
         // servo for the ball dumper
         ballServo = new Servo(2);
@@ -24,17 +25,19 @@ public class ballSystem extends Subsystem {
     @Override
     public void operate() {
         if (controller.getAButton()) {
-            chain.set(ControlMode.PercentOutput, 1);
+            belt.set(ControlMode.PercentOutput, 1);
+        } else {
+            belt.set(ControlMode.PercentOutput, 0);
         }
     }
 
     public void openGate() {
-        ballServo.set(90);
-        chain.set(ControlMode.PercentOutput, 1);
+        ballServo.set(95 + servoOffsetAngle);
+        belt.set(ControlMode.PercentOutput, 1);
     }
 
     public void closeGate() {
-        ballServo.set(0);
-        chain.set(ControlMode.PercentOutput, 1);
+        ballServo.set(0 + servoOffsetAngle);
+        belt.set(ControlMode.PercentOutput, 1);
     }
 }
