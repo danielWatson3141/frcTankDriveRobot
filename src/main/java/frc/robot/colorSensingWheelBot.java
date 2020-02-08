@@ -86,7 +86,7 @@ public class colorSensingWheelBot extends TimedRobot {
             driver.move(1.4859);
         case middle:
             driver.move(1.4859);
-            driver.turn(90);
+            driver.turn(-90);
         case near:
             deposit();
             driver.move(-3.2);          
