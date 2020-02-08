@@ -8,24 +8,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 
 public class colorSensingWheelBot extends TimedRobot {
 
@@ -145,13 +132,25 @@ public class colorSensingWheelBot extends TimedRobot {
                 changeState(drive);
             }
             break;
+
+        case extend:
+            lifter.extend();
+            if (myController.getStickButtonPressed(Hand.kRight)) {
+                changeState(retract);
+            }
+
+            break;
+
+        case retract:
+            lifter.retract();
+            break;
         }
     }
 
     private void changeState(int toState) {
         try {
             resetButtons();
-            System.out.println("Changing state: "+state+" -> "+toState);
+            System.out.println("Changing state: " + state + " -> " + toState);
             switch (state) {
             case spin:
                 spinner.stopSpinning();
@@ -162,69 +161,33 @@ public class colorSensingWheelBot extends TimedRobot {
             case balls:
                 ballDrive.closeGate();
                 break;
-            //case balls:
+            // case balls:
             // action takes place in state change
-            //break;
-
-        case extend:
-            lifter.extend();
-            if (myController.getStickButtonPressed(Hand.kRight)) {
-                changeState(retract);
+            // break;
             }
 
-            break;
-
-        case retract:
-            lifter.retract();
-            break;
-        }
-    }
-    catch (Exception e){
-        System.out.println("Error in switching states");
-    }
-
-}
-
-   /* public void changeState(int toState) {
-        resetButtons();
-        System.out.println("Changing state: "+state+" -> "+toState);
-        switch (state) {
-        case spin:
-            spinner.stopSpinning();
-            break;
-        case spinT:
-            spinner.stopSpinning();
-            break;
-        case balls:
-            ballDrive.closeGate();
-            break;
-        case extend:
-            lifter.extend();
-            if (myController.getStickButtonPressed(Hand.kRight)) {
-                changeState(retract);
+            switch (toState) {
+            case spin:
+                spinner.sectorCount = 0;
+                spinner.currentColor = spinner.dColor;
+                break;
+            case spinT:
+                spinner.currentColor = spinner.dColor;
+                break;
+            case balls:
+                ballDrive.openGate();
+                break;
+            case drive:
+                break;
             }
-            break;
-        case retract:
-            lifter.retract();
-            break;
+            state = toState;
+        } catch (
+
+        Exception e) {
+            System.out.println("Error in switching states");
         }
 
-        switch (toState) {
-        case spin:
-            spinner.sectorCount = 0;
-            spinner.currentColor = spinner.dColor;
-            break;
-        case spinT:
-            spinner.currentColor = spinner.dColor;
-            break;
-        case balls:
-            ballDrive.openGate();
-            break;
-        case drive:
-            break;
-        }
-        state = toState;
-    }*/
+    }
 
     public void resetButtons() {
         for (int i = 1; i <= 10; i++)
@@ -232,15 +195,15 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     public void deposit() {
-        if(vision.targetAcquired()){
+        if (vision.targetAcquired()) {
             double xd = vision.targetXOffset();
             double yd = vision.targetYOffset();
             double targetRobotAxisAngle = Math.atan(xd / yd);
-            System.out.println("targetRobotAxisAngle: "+targetRobotAxisAngle);
+            System.out.println("targetRobotAxisAngle: " + targetRobotAxisAngle);
             double robotOffTargetAngle = vision.targetAngleOffset();
-            System.out.println("robotOffTargetAngle: "+robotOffTargetAngle);
+            System.out.println("robotOffTargetAngle: " + robotOffTargetAngle);
             double angleToAxis = targetRobotAxisAngle + robotOffTargetAngle;
-            System.out.println("angleToAxis: "+angleToAxis);
+            System.out.println("angleToAxis: " + angleToAxis);
 
             driver.turn(angleToAxis);
             driver.move(xd);
@@ -249,28 +212,30 @@ public class colorSensingWheelBot extends TimedRobot {
             changeState(balls);
         }
     }
+
     @Override
     public void testPeriodic() {
+        driver.accumulate();
         driver.operate();
         if (myController.getAButton())
             ballDrive.belt.set(ControlMode.PercentOutput, 1);
-            else
-                ballDrive.belt.set(ControlMode.PercentOutput, 0);  
+        else
+            ballDrive.belt.set(ControlMode.PercentOutput, 0);
         if (myController.getBButton())
             ballDrive.ballServo.set(95);
-            else
-                ballDrive.ballServo.set(0);
+        else
+            ballDrive.ballServo.set(0);
         if (myController.getXButton())
             lifter.extTalon.set(ControlMode.PercentOutput, .2);
-            else
-                lifter.extTalon.set(ControlMode.PercentOutput, 0);
+        else
+            lifter.extTalon.set(ControlMode.PercentOutput, 0);
         if (myController.getYButton())
             lifter.ropeTalon.set(ControlMode.PercentOutput, -.2);
-            else
-                lifter.ropeTalon.set(ControlMode.PercentOutput, 0);
+        else
+            lifter.ropeTalon.set(ControlMode.PercentOutput, 0);
         if (myController.getBumper(Hand.kLeft))
             spinner.spinnerMotor.setSpeed(.2);
-            else
-                spinner.spinnerMotor.setSpeed(0);
+        else
+            spinner.spinnerMotor.setSpeed(0);
     }
 }

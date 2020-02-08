@@ -16,7 +16,7 @@ public class ballSystem extends Subsystem {
         super(theRobot);
 
         // motor for ball grabber
-        belt = new TalonSRX(5);
+        belt = new TalonSRX(6);
 
         // servo for the ball dumper
         ballServo = new Servo(2);

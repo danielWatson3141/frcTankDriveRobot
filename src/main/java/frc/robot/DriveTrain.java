@@ -25,6 +25,8 @@ public abstract class DriveTrain extends Subsystem {
         leftSpeed = (controller.getRawAxis(1) + controller.getRawAxis(0)) * .5;
         rightSpeed = (-controller.getRawAxis(1) + controller.getRawAxis(0)) * .5;
 
+        accumulate();
+
         setWheelSpeed(leftSpeed, rightSpeed);
     }
 
@@ -83,7 +85,7 @@ public abstract class DriveTrain extends Subsystem {
         return result;
     }
 
-    private void accumulate() {
+    public void accumulate() {
         double dt;
         long currentTime;
         if (previousTime == 0) {
@@ -96,7 +98,9 @@ public abstract class DriveTrain extends Subsystem {
 
         laccumulator += dt * rotationRate(Hand.kLeft) * wheelRadius * gearRatio;
         raccumulator += dt * rotationRate(Hand.kRight) * wheelRadius * gearRatio;
-        SmartDashboard.putNumber("Left Accumulator", laccumulator);
+        SmartDashboard.putNumber("Accumulator", laccumulator);
+        SmartDashboard.putNumber("Rotation Rate", rotationRate(Hand.kLeft));
+        
 
     }
 

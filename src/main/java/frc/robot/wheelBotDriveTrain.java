@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -25,7 +26,8 @@ public class wheelBotDriveTrain extends DriveTrain {
         r2Talon = new TalonSRX(4);
 
         l1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        ErrorCode encoderCode = r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        SmartDashboard.putString("QuadError", encoderCode.toString());
 
     }
 
@@ -43,7 +45,7 @@ public class wheelBotDriveTrain extends DriveTrain {
 
         double unitsPers;
         if( side == Hand.kLeft){
-            unitsPers =  l1Talon.getSelectedSensorVelocity(0)*10;
+            unitsPers =  l2Talon.getSelectedSensorVelocity(0)*10;
         }else{
             unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
         }
