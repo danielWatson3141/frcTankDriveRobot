@@ -33,8 +33,7 @@ public abstract class DriveTrain extends Subsystem {
     // theta: degrees
     // turn at half speed
     public void turn(double theta) {
-
-        double totalDistance = 0;
+        resetAccumulator();
         double leftSpeed, rightSpeed;
         distanceTravelled(Hand.kLeft);
 
@@ -43,9 +42,8 @@ public abstract class DriveTrain extends Subsystem {
 
         double distance = theta * wheelRadius * Math.PI / 180;
 
-        while (totalDistance < distance) {
+        while (distanceTravelled(Hand.kLeft) < distance) {
             accumulate();
-            totalDistance += distanceTravelled(Hand.kLeft);
         }
 
         leftSpeed = rightSpeed = .0;
@@ -55,18 +53,15 @@ public abstract class DriveTrain extends Subsystem {
     // distance: meters
     // move at half speed
     public void move(double distance) {
-        double totalDistance = 0;
+        resetAccumulator();
         double leftSpeed, rightSpeed;
         distanceTravelled(Hand.kLeft);
         leftSpeed = .5 * Math.signum(distance);
         rightSpeed = -.5 * Math.signum(distance);
         setWheelSpeed(leftSpeed, rightSpeed);
 
-        while (totalDistance < distance) {
+        while (distanceTravelled(Hand.kLeft) < distance) {
             accumulate();
-            totalDistance += distanceTravelled(Hand.kLeft);
-            SmartDashboard.putNumber("distance travelled", totalDistance);
-
         }
 
         leftSpeed = rightSpeed = .0;
@@ -77,12 +72,14 @@ public abstract class DriveTrain extends Subsystem {
         double result;
         if (side == Hand.kLeft) {
             result = laccumulator;
-            laccumulator = 0;
         } else {
             result = raccumulator;
-            raccumulator = 0;
         }
         return result;
+    }
+    private void resetAccumulator() {
+        laccumulator = 0;
+        raccumulator = 0;
     }
 
     public void accumulate() {
