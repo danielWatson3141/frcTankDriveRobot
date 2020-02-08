@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.Servo;
 public class ballSystem extends Subsystem {
 
     // This is the motor for the belt and the servo motor for the ball mechanism
-    private TalonSRX belt;
-    private Servo ballServo;
-    private static final double servoOffsetAngle = 0;
+    public TalonSRX belt;
+    public Servo ballServo;
+    public static final double servoOffsetAngle = 0;
 
     public ballSystem(colorSensingWheelBot theRobot) {
         super(theRobot);

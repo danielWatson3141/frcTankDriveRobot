@@ -15,13 +15,13 @@ public class spinnerSystem extends Subsystem {
     /**
      * Change the I2C port below to match the connection of your color sensor
      */
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    public final I2C.Port i2cPort = I2C.Port.kOnboard;
 
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter.
      * The device will be automatically initialized with default parameters.
      */
-    private final ColorSensorV3 m_colorSensor;
+    public final ColorSensorV3 m_colorSensor;
 
     // The color currently detected by the sensor
     Color detectedColor;
@@ -46,7 +46,7 @@ public class spinnerSystem extends Subsystem {
     public final String green = "GREEN";
 
     // an array for converting int to string and back
-    private final String[] colors = { red, yellow, blue, green };
+    public final String[] colors = { red, yellow, blue, green };
 
     // The color that the user has designated the target color
     public int targetColor = 0;
@@ -55,11 +55,11 @@ public class spinnerSystem extends Subsystem {
     int dColor;
 
     // This is the motor for spinning the spinner wheel
-    private TalonSRX spinnerMotor;
+    public PWM spinnerMotor;
 
     public spinnerSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
-        spinnerMotor = new TalonSRX(5);
+        spinnerMotor = new PWM(5);
         m_colorSensor = new ColorSensorV3(i2cPort);
     }
 
@@ -118,7 +118,8 @@ public class spinnerSystem extends Subsystem {
 
     public void spin() {
         //System.out.println("spinning");
-        spinnerMotor.set(ControlMode.PercentOutput, .2);
+        //spinnerMotor.set(ControlMode.PercentOutput, .2);
+        spinnerMotor.setSpeed(.20);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             SmartDashboard.putNumber("sectorCount", sectorCount);
@@ -129,7 +130,8 @@ public class spinnerSystem extends Subsystem {
 
     public void spinT() {
         //System.out.println("spinning");
-        spinnerMotor.set(ControlMode.PercentOutput, .15);
+       // spinnerMotor.set(ControlMode.PercentOutput, .15);
+        spinnerMotor.setSpeed(.15);
         if (dColor == (currentColor + 1) % 4) {
             SmartDashboard.putString("currentColor", colors[currentColor]);
             currentColor++;
@@ -139,9 +141,10 @@ public class spinnerSystem extends Subsystem {
 
     public void stopSpinning() {
         //spinnerMotor.set(ControlMode.PercentOutput, 0);
+        spinnerMotor.setSpeed(0);
     }
 
-    private int ColorToInt(Color c) {
+    public int ColorToInt(Color c) {
         double r = c.red;
         double g = c.green;
         double b = c.blue;
@@ -162,7 +165,7 @@ public class spinnerSystem extends Subsystem {
 
     }
 
-    private String ColorToString(Color c) {
+    public String ColorToString(Color c) {
         return colors[ColorToInt(c)];
     }
 }
