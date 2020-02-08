@@ -145,6 +145,8 @@ public class colorSensingWheelBot extends TimedRobot {
                 changeState(drive);
             }
             break;
+        }
+    }
 
     private void changeState(int toState) {
         try {
@@ -160,9 +162,9 @@ public class colorSensingWheelBot extends TimedRobot {
             case balls:
                 ballDrive.closeGate();
                 break;
-        case balls:
+            //case balls:
             // action takes place in state change
-            break;
+            //break;
 
         case extend:
             lifter.extend();
@@ -177,10 +179,11 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
         }
     }
+}
 
-    public void changeState(int toState) {
+   /* public void changeState(int toState) {
         resetButtons();
-
+        System.out.println("Changing state: "+state+" -> "+toState);
         switch (state) {
         case spin:
             spinner.stopSpinning();
@@ -190,6 +193,15 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
         case balls:
             ballDrive.closeGate();
+            break;
+        case extend:
+            lifter.extend();
+            if (myController.getStickButtonPressed(Hand.kRight)) {
+                changeState(retract);
+            }
+            break;
+        case retract:
+            lifter.retract();
             break;
         }
 
@@ -208,7 +220,7 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
         }
         state = toState;
-    }
+    }*/
 
     public void resetButtons() {
         for (int i = 1; i <= 10; i++)
