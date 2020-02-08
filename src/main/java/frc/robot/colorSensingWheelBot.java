@@ -23,7 +23,10 @@ public class colorSensingWheelBot extends TimedRobot {
     public final int balls = 3;
     public final int extend = 4;
     public final int retract = 5;
-    public final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT" };
+    public final int far = 3;
+    public final int middle = 2;
+    public final int near = 1;
+    public final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT", "FAR", "MIDDLE", "NEAR" };
 
     // This variable stores the robot's current state
     public int state = 0;
@@ -78,6 +81,18 @@ public class colorSensingWheelBot extends TimedRobot {
         for (Subsystem s : systems) {
             s.activate();
         }
+        switch (state) {
+        case far:
+            driver.move(1.4859);
+        case middle:
+            driver.move(1.4859);
+            driver.turn(90);
+        case near:
+            deposit();
+            driver.move(-3.2);          
+            break;
+        }
+
     }
 
     @Override
