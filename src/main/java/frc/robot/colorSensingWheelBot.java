@@ -179,6 +179,10 @@ public class colorSensingWheelBot extends TimedRobot {
             break;
         }
     }
+    catch (Exception e){
+        System.out.println("Error in switching states");
+    }
+
 }
 
    /* public void changeState(int toState) {
