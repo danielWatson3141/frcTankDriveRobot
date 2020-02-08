@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -57,7 +59,7 @@ public class spinnerSystem extends Subsystem {
 
     public spinnerSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
-        spinnerMotor = new PWM(1);
+        spinnerMotor = new TalonSRX(5);
         m_colorSensor = new ColorSensorV3(i2cPort);
     }
 
@@ -106,7 +108,7 @@ public class spinnerSystem extends Subsystem {
     }
 
     public void spin() {
-        spinnerMotor.setSpeed(.20);
+        spinnerMotor.set(ControlMode.PercentOutput, .20);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             SmartDashboard.putNumber("sectorCount", sectorCount);
@@ -116,7 +118,7 @@ public class spinnerSystem extends Subsystem {
     }
 
     public void spinT() {
-        spinnerMotor.setSpeed(.15);
+        spinnerMotor.set(ControlMode.PercentOutput, .15);
         if (dColor == (currentColor + 1) % 4) {
             SmartDashboard.putString("currentColor", colors[currentColor]);
             currentColor++;
@@ -125,7 +127,7 @@ public class spinnerSystem extends Subsystem {
     }
 
     public void stopSpinning() {
-        spinnerMotor.setSpeed(0);
+        spinnerMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public int ColorToInt(Color c) {
