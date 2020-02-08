@@ -13,13 +13,13 @@ public class spinnerSystem extends Subsystem {
     /**
      * Change the I2C port below to match the connection of your color sensor
      */
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+    public final I2C.Port i2cPort = I2C.Port.kOnboard;
 
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter.
      * The device will be automatically initialized with default parameters.
      */
-    private final ColorSensorV3 m_colorSensor;
+    public final ColorSensorV3 m_colorSensor;
 
     // The color currently detected by the sensor
     Color detectedColor;
@@ -44,7 +44,7 @@ public class spinnerSystem extends Subsystem {
     public final String green = "GREEN";
 
     // an array for converting int to string and back
-    private final String[] colors = { red, yellow, blue, green };
+    public final String[] colors = { red, yellow, blue, green };
 
     // The color that the user has designated the target color
     public int targetColor = 0;
@@ -53,7 +53,7 @@ public class spinnerSystem extends Subsystem {
     int dColor;
 
     // This is the motor for spinning the spinner wheel
-    private PWM spinnerMotor;
+    public PWM spinnerMotor;
 
     public spinnerSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
@@ -128,7 +128,7 @@ public class spinnerSystem extends Subsystem {
         spinnerMotor.setSpeed(0);
     }
 
-    private int ColorToInt(Color c) {
+    public int ColorToInt(Color c) {
         double r = c.red;
         double g = c.green;
         double b = c.blue;
@@ -149,7 +149,7 @@ public class spinnerSystem extends Subsystem {
 
     }
 
-    private String ColorToString(Color c) {
+    public String ColorToString(Color c) {
         return colors[ColorToInt(c)];
     }
 }

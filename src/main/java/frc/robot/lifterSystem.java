@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj.Talon;
 public class lifterSystem extends Subsystem {
 
     // This is the motors and hall effect sensors for the lifter mechanisms
-    private Talon extTalon;
-    private Talon ropeTalon;
-    private DigitalInput sensorTop;
-    private DigitalInput sensorBottom;
+    public Talon extTalon;
+    public Talon ropeTalon;
+    public DigitalInput sensorTop;
+    public DigitalInput sensorBottom;
+
 
     public lifterSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
