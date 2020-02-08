@@ -23,13 +23,17 @@ public class colorSensingWheelBot extends TimedRobot {
     public final int balls = 3;
     public final int extend = 4;
     public final int retract = 5;
-    public final int far = 3;
-    public final int middle = 2;
-    public final int near = 1;
+    
     public final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT", "FAR", "MIDDLE", "NEAR" };
 
     // This variable stores the robot's current state
     public int state = 0;
+
+    //these variables define the starting point of the robot
+    public int startPosition = 1;
+    public final int far = 3;
+    public final int middle = 2;
+    public final int near = 1;
 
     // The Xbox controller input device
     public XboxController myController = new XboxController(0);
@@ -81,7 +85,7 @@ public class colorSensingWheelBot extends TimedRobot {
         for (Subsystem s : systems) {
             s.activate();
         }
-        switch (state) {
+        switch (startPosition) {
         case far:
             driver.move(1.4859);
         case middle:
