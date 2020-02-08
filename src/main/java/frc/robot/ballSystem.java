@@ -24,6 +24,7 @@ public class ballSystem extends Subsystem {
 
     @Override
     public void operate() {
+        // makes the ball collect motor run
         if (controller.getAButton()) {
             belt.set(ControlMode.PercentOutput, 1);
         } else {
@@ -32,11 +33,13 @@ public class ballSystem extends Subsystem {
     }
 
     public void openGate() {
+        // opens the gate to release the balls
         ballServo.set(95 + servoOffsetAngle);
         belt.set(ControlMode.PercentOutput, 1);
     }
 
     public void closeGate() {
+        // closes the gate
         ballServo.set(0 + servoOffsetAngle);
         belt.set(ControlMode.PercentOutput, 1);
     }

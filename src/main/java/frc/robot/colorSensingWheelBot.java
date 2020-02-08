@@ -85,6 +85,8 @@ public class colorSensingWheelBot extends TimedRobot {
         for (Subsystem s : systems) {
             s.activate();
         }
+        // code of autonomous period
+        // three cases for three starting positions
         switch (startPosition) {
         case far:
             driver.move(1.4859);
@@ -103,6 +105,7 @@ public class colorSensingWheelBot extends TimedRobot {
     public void teleopInit() {
         super.teleopInit();
         for (Subsystem s : systems) {
+            // activates everything
             s.activate();
         }
     }
@@ -180,9 +183,6 @@ public class colorSensingWheelBot extends TimedRobot {
             case balls:
                 ballDrive.closeGate();
                 break;
-            // case balls:
-            // action takes place in state change
-            // break;
             }
 
             switch (toState) {
@@ -201,7 +201,6 @@ public class colorSensingWheelBot extends TimedRobot {
             }
             state = toState;
         } catch (
-
         Exception e) {
             System.out.println("Error in switching states");
         }
@@ -214,6 +213,9 @@ public class colorSensingWheelBot extends TimedRobot {
     }
 
     public void deposit() {
+        // if the vision target is aquired, the robot will move in the x direction
+        // turn 90 deg and move in the y direction
+        // then it will go into the balls state and release the balls
         if (vision.targetAcquired()) {
             double xd = vision.targetXOffset();
             double yd = vision.targetYOffset();
@@ -234,6 +236,8 @@ public class colorSensingWheelBot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
+        // tester code
+        // each button is associated with a motor
         driver.accumulate();
         driver.operate();
         if (myController.getAButton())
@@ -257,9 +261,10 @@ public class colorSensingWheelBot extends TimedRobot {
         else
             spinner.spinnerMotor.setSpeed(0);
         if (myController.getBumper(Hand.kRight))
+            // moves 1 m
             driver.move(1);
         if (myController.getStickButton(Hand.kRight))
+            // turn 90 deg
             driver.turn(90);
-        //hopefully this worked
     }
 }

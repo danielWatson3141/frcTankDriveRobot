@@ -205,6 +205,8 @@ public class cameravision extends TimedRobot {
         double g = c.green;
         double b = c.blue;
 
+        // determines what color the color sensor is sensing by comparing the
+        // rgb levels
         if (r > g && r > b)
             return 0;
         if (g - b > .2) {
@@ -224,6 +226,7 @@ public class cameravision extends TimedRobot {
         double leftSpeed;
         double rightSpeed;
 
+        // wheels speed set according to the x and y levels of the left stick axis
         leftSpeed = (leftStick.getY() + leftStick.getX()) * .5;
         rightSpeed = (-leftStick.getY() + leftStick.getX()) * .5;
 
@@ -235,12 +238,14 @@ public class cameravision extends TimedRobot {
     }
 
     private void spin() {
+        // turns on spin motor and carries out spin 3-5 times method
         vex.set(ControlMode.PercentOutput, 1);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             currentColor++;
             currentColor %= 4;
         }
+        // once sector count hits 28 the motor stops
         if (sectorCount == 28) {
             state = drive;
         }
@@ -248,6 +253,8 @@ public class cameravision extends TimedRobot {
     }
 
     private void spinT() {
+        // sets the spin motor to 20%
+        // the rest of the code is in the state system
         vex.set(ControlMode.PercentOutput, .2);
     }
 }
