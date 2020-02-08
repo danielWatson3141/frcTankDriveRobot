@@ -256,5 +256,9 @@ public class colorSensingWheelBot extends TimedRobot {
             spinner.spinnerMotor.setSpeed(.2);
         else
             spinner.spinnerMotor.setSpeed(0);
+        if (myController.getBumper(Hand.kRight))
+            driver.move(1);
+        if (myController.getStickButton(Hand.kRight))
+            driver.turn(90);
     }
 }

@@ -4,8 +4,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class visionSystem extends Subsystem {
+
+    public Ultrasonic front;
+    public Ultrasonic rear;
 
     // This is network table data for the limelight
     private NetworkTable table;
@@ -39,6 +43,8 @@ public class visionSystem extends Subsystem {
         ts = table.getEntry("ts");
         tshort = table.getEntry("tshort");
         tlong = table.getEntry("tlong");
+        front = new Ultrasonic(0,0);
+        rear = new Ultrasonic(1,1);
     }
 
     @Override
@@ -96,5 +102,17 @@ public class visionSystem extends Subsystem {
         return Math.acos((Math.pow(c, 2) - Math.pow(b, 2) - Math.pow(a, 2)) / (-2 * a * b));
     }
 
+    public boolean obstacleDetectedFront(){
+        //front.getRangeMM();
+        if (front.getRangeMM() <= 20)
+            return true;
+        return false;
+    }
+
+    public boolean obstacleDetectedRear(){
+        if (rear.getRangeMM() <= 20)
+            return true;
+        return false;
+    }
 
 }
