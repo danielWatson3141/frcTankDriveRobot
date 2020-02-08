@@ -50,7 +50,7 @@ public class wheelBotDriveTrain extends DriveTrain {
             unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
         }
 
-        SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
+        //SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
 
         return unitsPers / unitsPerRadian;
     }

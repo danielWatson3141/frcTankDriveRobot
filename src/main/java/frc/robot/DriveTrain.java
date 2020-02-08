@@ -87,14 +87,13 @@ public abstract class DriveTrain extends Subsystem {
 
     public void accumulate() {
         double dt;
-        long currentTime;
+        long currentTime = System.currentTimeMillis();
         if (previousTime == 0) {
             dt = 0;
         } else {
-            currentTime = System.currentTimeMillis();
             dt = (currentTime - previousTime) / 1000.0;
-            previousTime = currentTime;
         }
+        previousTime = currentTime;
 
         laccumulator += dt * rotationRate(Hand.kLeft) * wheelRadius * gearRatio;
         raccumulator += dt * rotationRate(Hand.kRight) * wheelRadius * gearRatio;
