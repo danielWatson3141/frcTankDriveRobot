@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,6 +16,7 @@ public class wheelBotDriveTrain extends DriveTrain {
     private TalonSRX r1Talon;
     private TalonSRX l2Talon;
     private TalonSRX r2Talon;
+    private Spark ledDriver;
 
     
     public wheelBotDriveTrain(colorSensingWheelBot theRobot){
@@ -54,4 +56,21 @@ public class wheelBotDriveTrain extends DriveTrain {
 
         return unitsPers / unitsPerRadian;
     }
+    public void setColor()
+    {
+        int count = 0;
+        ledDriver = new Spark(1);
+        if (controller.getStartButtonPressed()) {
+            count++;
+        if (count == 0)
+            ledDriver.set(0.87);
+        else if (count == 1)
+            ledDriver.set(0.61);
+        else if (count > 1) 
+            count = 0;
+            
+        }
+    }
+        
+    
 }
