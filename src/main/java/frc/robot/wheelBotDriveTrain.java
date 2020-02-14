@@ -59,7 +59,7 @@ public class wheelBotDriveTrain extends DriveTrain {
     public void setColor()
     {
         int count = 0;
-        ledDriver = new Spark(1);
+        ledDriver = new Spark(5);
         if (controller.getStartButtonPressed()) {
             count++;
         if (count == 0)
