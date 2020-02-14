@@ -14,6 +14,8 @@ public abstract class DriveTrain extends Subsystem {
     static final double unitsPerRotation = 360;
     static final double unitsPerRadian = unitsPerRotation / (2 * Math.PI);
 
+    static final Double STEERING_STRENGTH = .5;
+
     public DriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
     }
@@ -22,50 +24,62 @@ public abstract class DriveTrain extends Subsystem {
         double leftSpeed;
         double rightSpeed;
 
-        leftSpeed = (controller.getRawAxis(1) + controller.getRawAxis(0)) * .5;
-        rightSpeed = (-controller.getRawAxis(1) + controller.getRawAxis(0)) * .5;
-
-        accumulate();
+        double xAxis = controller.getRawAxis(1) * STEERING_STRENGTH; //dampen the x axis to improve handling
+        double yAxis = controller.getRawAxis(0);
+        
+        
+        leftSpeed = ( xAxis + yAxis) * .5;
+        rightSpeed = (-xAxis + yAxis) * .5;
 
         setWheelSpeed(leftSpeed, rightSpeed);
+
+        accumulate();
     }
 
     // theta: degrees
     // turn at half speed
     public void turn(double theta) {
-        resetAccumulator();
-        double leftSpeed, rightSpeed;
-        distanceTravelled(Hand.kLeft);
+        try {
+            resetAccumulator();
+            double leftSpeed, rightSpeed;
+            distanceTravelled(Hand.kLeft);
 
-        leftSpeed = rightSpeed = Math.signum(theta) * .5;
-        setWheelSpeed(leftSpeed, rightSpeed);
+            leftSpeed = rightSpeed = Math.signum(theta) * STEERING_STRENGTH;
+            setWheelSpeed(leftSpeed, rightSpeed);
 
-        double distance = theta * wheelRadius * Math.PI / 180;
+            // .5 is because we have 2 "wheels" turning opposite directions
+            double distance = .5 * theta * wheelRadius * Math.PI / 180;
 
-        while (distanceTravelled(Hand.kLeft) < distance) {
-            accumulate();
+            while (distanceTravelled(Hand.kLeft) < distance) {
+                accumulate();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Problem turning! " + e.getStackTrace());
+        } finally {
+            setWheelSpeed(0, 0); //this always executes
         }
-
-        leftSpeed = rightSpeed = .0;
-        setWheelSpeed(leftSpeed, rightSpeed);
     }
 
     // distance: meters
     // move at half speed
     public void move(double distance) {
-        resetAccumulator();
-        double leftSpeed, rightSpeed;
-        distanceTravelled(Hand.kLeft);
-        leftSpeed = .5 * Math.signum(distance);
-        rightSpeed = -.5 * Math.signum(distance);
-        setWheelSpeed(leftSpeed, rightSpeed);
+        try {
+            resetAccumulator();
+            double leftSpeed, rightSpeed;
+            distanceTravelled(Hand.kLeft);
+            leftSpeed = .5 * Math.signum(distance);
+            rightSpeed = -.5 * Math.signum(distance);
+            setWheelSpeed(leftSpeed, rightSpeed);
 
-        while (distanceTravelled(Hand.kLeft) < distance) {
-            accumulate();
+            while (distanceTravelled(Hand.kLeft) < distance) {
+                accumulate();
+            }
+        } catch (Exception e) {
+            System.out.println("Problem turning! " + e.getStackTrace());
+        } finally {
+            setWheelSpeed(0, 0); //this always executes
         }
-
-        leftSpeed = rightSpeed = .0;
-        setWheelSpeed(leftSpeed, rightSpeed);
     }
 
     private double distanceTravelled(Hand side) {
@@ -77,6 +91,7 @@ public abstract class DriveTrain extends Subsystem {
         }
         return result;
     }
+
     private void resetAccumulator() {
         laccumulator = 0;
         raccumulator = 0;
@@ -96,7 +111,6 @@ public abstract class DriveTrain extends Subsystem {
         raccumulator += dt * rotationRate(Hand.kRight) * wheelRadius * gearRatio;
         SmartDashboard.putNumber("Accumulator", laccumulator);
         SmartDashboard.putNumber("Rotation Rate", rotationRate(Hand.kLeft));
-        
 
     }
 

@@ -23,7 +23,12 @@ public abstract class Subsystem{
 
     public void act(){
         if(active){
-            operate();
+            try{
+                operate();
+            } catch (Exception e){
+                System.out.println("Problem occured in "+this.getClass()+": \n"+e.getStackTrace()+"\n"+"System shut down!");
+                active = false;
+            }
         }
     }
 

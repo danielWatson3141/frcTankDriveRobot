@@ -23,13 +23,13 @@ public class colorSensingWheelBot extends TimedRobot {
     public final int balls = 3;
     public final int extend = 4;
     public final int retract = 5;
-    
+
     public final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT", "FAR", "MIDDLE", "NEAR" };
 
     // This variable stores the robot's current state
     public int state = 0;
 
-    //these variables define the starting point of the robot
+    // these variables define the starting point of the robot
     public int startPosition = 1;
     public final int far = 3;
     public final int middle = 2;
@@ -50,15 +50,42 @@ public class colorSensingWheelBot extends TimedRobot {
     public void robotInit() {
 
         myController = new XboxController(0);
-
-        driver = new wheelBotDriveTrain(this);
-
-        spinner = new spinnerSystem(this);
-        ballDrive = new ballSystem(this);
-        lifter = new lifterSystem(this);
-        vision = new visionSystem(this);
+        try {
+            driver = new wheelBotDriveTrain(this);
+        } catch (Exception e) {
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
+                    + "System failed to activate!");
+            System.out.println("driver failed to activate.");
+        }
+        try {
+            spinner = new spinnerSystem(this);
+        } catch (Exception e) {
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
+                    + "System failed to activate!");
+            System.out.println("spinner failed to activate.");
+        }
+        try {
+            ballDrive = new ballSystem(this);
+        } catch (Exception e) {
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
+                    + "System failed to activate!");
+            System.out.println("balldrive failed to activate.");
+        }
+        try {
+            lifter = new lifterSystem(this);
+        } catch (Exception e) {
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
+                    + "System failed to activate!");
+            System.out.println("lifter failed to activate.");
+        }
+        try {
+            vision = new visionSystem(this);
+        } catch (Exception e) {
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
+                    + "System failed to activate!");
+            System.out.println("vision failed to activate.");
+        }
         systems = new Subsystem[] { driver, spinner, ballDrive, lifter, vision };
-
         spinner.activate();
         vision.activate();
     }
@@ -74,6 +101,7 @@ public class colorSensingWheelBot extends TimedRobot {
         currentTime = System.currentTimeMillis();
 
         for (Subsystem s : systems) {
+            // exceptions are handled by the act method
             s.act();
         }
 
@@ -95,7 +123,7 @@ public class colorSensingWheelBot extends TimedRobot {
             driver.turn(-90);
         case near:
             deposit();
-            driver.move(-3.2);          
+            driver.move(-3.2);
             break;
         }
 
@@ -106,6 +134,7 @@ public class colorSensingWheelBot extends TimedRobot {
         super.teleopInit();
         for (Subsystem s : systems) {
             // activates everything
+            // doesn't need a try catch because it just flips a boolean
             s.activate();
         }
     }
@@ -199,10 +228,10 @@ public class colorSensingWheelBot extends TimedRobot {
             case drive:
                 break;
             }
+        } catch (Exception e) {
+            System.out.println("Error in switching states! " + e.getStackTrace());
+        } finally {
             state = toState;
-        } catch (
-        Exception e) {
-            System.out.println("Error in switching states");
         }
 
     }
@@ -216,30 +245,41 @@ public class colorSensingWheelBot extends TimedRobot {
         // if the vision target is aquired, the robot will move in the x direction
         // turn 90 deg and move in the y direction
         // then it will go into the balls state and release the balls
-        if (vision.targetAcquired()) {
-            double xd = vision.targetXOffset();
-            double yd = vision.targetYOffset();
-            double targetRobotAxisAngle = Math.atan(xd / yd);
-            System.out.println("targetRobotAxisAngle: " + targetRobotAxisAngle);
-            double robotOffTargetAngle = vision.targetAngleOffset();
-            System.out.println("robotOffTargetAngle: " + robotOffTargetAngle);
-            double angleToAxis = targetRobotAxisAngle + robotOffTargetAngle;
-            System.out.println("angleToAxis: " + angleToAxis);
+        try {
+            if (vision.targetAcquired()) {
 
-            driver.turn(angleToAxis);
-            driver.move(xd);
-            driver.turn(90 * (-Math.signum(angleToAxis)));
-            driver.move(yd);
-            changeState(balls);
+                double xd = vision.targetXOffset();
+                double yd = vision.targetYOffset();
+                double targetRobotAxisAngle = Math.atan(xd / yd);
+                System.out.println("targetRobotAxisAngle: " + targetRobotAxisAngle);
+                double robotOffTargetAngle = vision.targetAngleOffset();
+                System.out.println("robotOffTargetAngle: " + robotOffTargetAngle);
+                double angleToAxis = targetRobotAxisAngle + robotOffTargetAngle;
+                System.out.println("angleToAxis: " + angleToAxis);
+
+                driver.turn(angleToAxis);
+                driver.move(xd);
+                driver.turn(90 * (-Math.signum(angleToAxis)));
+                driver.move(yd);
+                changeState(balls);
+
+            } else {
+                System.out.println("Failed to acquire target!!!");
+            }
+        } catch (Exception e) {
+            System.out.println("Problem encountered while depositing! "+e.getStackTrace());
         }
     }
 
+    // tester code
     @Override
     public void testPeriodic() {
-        // tester code
-        // each button is associated with a motor
-        driver.accumulate();
+
+        // operate the drivetrain (take controller input)
+
         driver.operate();
+
+        // each button is associated with a motor
         if (myController.getAButton())
             ballDrive.belt.set(ControlMode.PercentOutput, 1);
         else
