@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class nullSystem {
-    public class nullDriveTrain extends DriveTrain{
+    public static class nullDriveTrain extends DriveTrain{
         public nullDriveTrain(colorSensingWheelBot robot){
             super(robot);
         }
@@ -20,36 +20,36 @@ public class nullSystem {
         }
     }
 
-    public class extends  {
-        public (colorSensingWheelBot robot){
-
+    public static class nullBallSystem extends ballSystem {
+        public nullBallSystem(colorSensingWheelBot robot){
+            super(robot);
         }
         public void operate(){
 
         }
     }
 
-    public class extends  {
-        public (colorSensingWheelBot robot){
-
-        }
-        public void operate(){
-            
-        }
-    }
-
-    public class extends  {
-        public (colorSensingWheelBot robot){
-
+    public static class nullVisionSystem extends visionSystem {
+        public nullVisionSystem(colorSensingWheelBot robot){
+            super(robot);
         }
         public void operate(){
             
         }
     }
 
-    public class extends  {
-        public (colorSensingWheelBot robot){
+    public static class nullLifterSystem extends lifterSystem {
+        public nullLifterSystem (colorSensingWheelBot robot){
+            super(robot);
+        }
+        public void operate(){
+            
+        }
+    }
 
+    public static class nullSpinnerSystem extends spinnerSystem {
+        public nullSpinnerSystem(colorSensingWheelBot robot){
+            super(robot);
         }
         public void operate(){
             

@@ -55,7 +55,8 @@ public abstract class DriveTrain extends Subsystem {
             }
 
         } catch (Exception e) {
-            System.out.println("Problem turning! " + e.getStackTrace());
+            e.printStackTrace();
+            System.out.println("Problem turning! ");
         } finally {
             setWheelSpeed(0, 0); //this always executes
         }
@@ -76,7 +77,8 @@ public abstract class DriveTrain extends Subsystem {
                 accumulate();
             }
         } catch (Exception e) {
-            System.out.println("Problem turning! " + e.getStackTrace());
+            e.printStackTrace();
+            System.out.println("Problem turning! ");
         } finally {
             setWheelSpeed(0, 0); //this always executes
         }
