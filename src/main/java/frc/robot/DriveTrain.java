@@ -64,6 +64,9 @@ public abstract class DriveTrain extends Subsystem {
             double distance = .5 * theta * wheelRadius * Math.PI / 180;
 
             while (distanceTravelled(Hand.kLeft) < distance) {
+                if(controller.getBButtonPressed()){
+                    return;
+                }
                 accumulate();
             }
 
@@ -87,6 +90,9 @@ public abstract class DriveTrain extends Subsystem {
             setWheelSpeed(leftSpeed, rightSpeed);
 
             while (distanceTravelled(Hand.kLeft) < distance) {
+                if(controller.getBButtonPressed()){
+                    return;
+                }
                 accumulate();
             }
         } catch (Exception e) {
