@@ -27,8 +27,12 @@ public class wheelBotDriveTrain extends DriveTrain {
         r2Talon = new TalonSRX(4);
 
         l1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        ErrorCode encoderCode = r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        SmartDashboard.putString("QuadError", encoderCode.toString());
+        ErrorCode encoderCode1 = l1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        ErrorCode encoderCode2 = r1Talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        SmartDashboard.putString("Quad1Error", encoderCode1.toString());
+        SmartDashboard.putString("Quad2Error", encoderCode2.toString());
+        
 
     }
 

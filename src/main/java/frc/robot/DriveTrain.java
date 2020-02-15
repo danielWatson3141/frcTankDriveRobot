@@ -44,8 +44,8 @@ public abstract class DriveTrain extends Subsystem {
         double leftSpeed;
         double rightSpeed;
 
-        double xAxis = controller.getRawAxis(1) * STEERING_STRENGTH; // dampen the x axis to improve handling
-        double yAxis = controller.getRawAxis(0);
+        double xAxis = -controller.getRawAxis(1); // dampen the x axis to improve handling
+        double yAxis = controller.getRawAxis(0)* STEERING_STRENGTH;
 
         leftSpeed = (xAxis + yAxis) * .5;
         rightSpeed = (-xAxis + yAxis) * .5;
@@ -63,16 +63,24 @@ public abstract class DriveTrain extends Subsystem {
             double initialAngle = imu.getAngle();
             double leftSpeed, rightSpeed;
 
-            leftSpeed = rightSpeed = Math.signum(theta) * STEERING_STRENGTH;
+            leftSpeed = rightSpeed = -Math.signum(theta) * .2;
             setWheelSpeed(leftSpeed, rightSpeed);
 
             // .5 is because we have 2 "wheels" turning opposite directions
 
-            while (angle < initialAngle + theta) {
+            while (true) {
+                angle = imu.getAngle();
+                System.out.println(angle);
                 if(controller.getBButtonPressed()){
                     return;
                 }
                 accumulate();
+
+                if( theta > 0 && angle > initialAngle + theta*.9)
+                    break;
+                if( theta < 0 && angle < initialAngle + theta*.9)
+                    break;
+                
             }
 
         } catch (Exception e) {
@@ -90,12 +98,16 @@ public abstract class DriveTrain extends Subsystem {
             resetAccumulator();
             double leftSpeed, rightSpeed;
             distanceTravelled(Hand.kLeft);
-            leftSpeed = .5 * Math.signum(distance);
-            rightSpeed = -.5 * Math.signum(distance);
+            leftSpeed = .1 * Math.signum(distance);
+            rightSpeed = -.1 * Math.signum(distance);
             setWheelSpeed(leftSpeed, rightSpeed);
+            double distanceSinceStart = 0;
 
-            while (distanceTravelled(Hand.kLeft) < distance) {
+            while (distanceSinceStart / 1000 <= distance*4.5) {
+                distanceSinceStart -= distanceTravelled(Hand.kLeft);
+                System.out.println("L:"+rotationRate(Hand.kLeft)+" R:"+rotationRate(Hand.kRight));
                 if(controller.getBButtonPressed()){
+                    setWheelSpeed(0, 0);
                     return;
                 }
                 accumulate();

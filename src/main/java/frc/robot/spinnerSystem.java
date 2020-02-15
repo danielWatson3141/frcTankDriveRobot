@@ -139,7 +139,7 @@ public class spinnerSystem extends Subsystem {
     public void spinT() {
         //System.out.println("spinning");
        // spinnerMotor.set(ControlMode.PercentOutput, .15);
-        spinnerMotor.set(ControlMode.PercentOutput, .15);
+        spinnerMotor.set(ControlMode.PercentOutput, .1);
         if (dColor == (currentColor + 1) % 4) {
             SmartDashboard.putString("currentColor", colors[currentColor]);
             currentColor++;
