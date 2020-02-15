@@ -53,36 +53,41 @@ public class colorSensingWheelBot extends TimedRobot {
         try {
             driver = new wheelBotDriveTrain(this);
         } catch (Exception e) {
-            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
-                    + "System failed to activate!");
+            e.printStackTrace();
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace().toString() + "\n"
+                    + "driver failed to activate!");
             System.out.println("driver failed to activate.");
         }
         try {
             spinner = new spinnerSystem(this);
         } catch (Exception e) {
-            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
-                    + "System failed to activate!");
+            e.printStackTrace();
+            System.out.println("Problem occured in " + this.getClass() + ": \n"
+                    + "Spinner failed to activate!");
             System.out.println("spinner failed to activate.");
         }
         try {
             ballDrive = new ballSystem(this);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
-                    + "System failed to activate!");
+                    + "ballDrive system failed to activate!");
             System.out.println("balldrive failed to activate.");
         }
         try {
             lifter = new lifterSystem(this);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
-                    + "System failed to activate!");
+                    + "Lifter system failed to activate!");
             System.out.println("lifter failed to activate.");
         }
         try {
             vision = new visionSystem(this);
         } catch (Exception e) {
-            System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace() + "\n"
-                    + "System failed to activate!");
+            e.printStackTrace();
+            System.out.println("Problem occured in " + this.getClass() + ": \n" 
+                    + "Vision failed to activate!");
             System.out.println("vision failed to activate.");
         }
         systems = new Subsystem[] { driver, spinner, ballDrive, lifter, vision };
@@ -101,8 +106,12 @@ public class colorSensingWheelBot extends TimedRobot {
         currentTime = System.currentTimeMillis();
 
         for (Subsystem s : systems) {
-            // exceptions are handled by the act method
-            s.act();
+            // exceptions are handled by the act
+            try {
+                s.act();
+            } catch (NullPointerException e) {
+                System.out.println(s.getClass().toString() + " failed to activate!");
+            }
         }
 
     }
@@ -111,7 +120,11 @@ public class colorSensingWheelBot extends TimedRobot {
     public void autonomousInit() {
         super.autonomousInit();
         for (Subsystem s : systems) {
-            s.activate();
+            try {
+                s.activate();
+            } catch (NullPointerException e) {
+                System.out.println(s.getClass().toString() + " failed to activate!");
+            }
         }
         // code of autonomous period
         // three cases for three starting positions
@@ -134,8 +147,11 @@ public class colorSensingWheelBot extends TimedRobot {
         super.teleopInit();
         for (Subsystem s : systems) {
             // activates everything
-            // doesn't need a try catch because it just flips a boolean
-            s.activate();
+            try {
+                s.activate();
+            } catch (NullPointerException e) {
+                System.out.println(s.getClass().toString() + " failed to activate!");
+            }
         }
     }
 
@@ -267,7 +283,7 @@ public class colorSensingWheelBot extends TimedRobot {
                 System.out.println("Failed to acquire target!!!");
             }
         } catch (Exception e) {
-            System.out.println("Problem encountered while depositing! "+e.getStackTrace());
+            System.out.println("Problem encountered while depositing! " + e.getStackTrace());
         }
     }
 

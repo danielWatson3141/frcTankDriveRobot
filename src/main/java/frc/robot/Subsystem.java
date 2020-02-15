@@ -26,7 +26,8 @@ public abstract class Subsystem{
             try{
                 operate();
             } catch (Exception e){
-                System.out.println("Problem occured in "+this.getClass()+": \n"+e.getStackTrace()+"\n"+"System shut down!");
+                e.printStackTrace();
+                System.out.println("Problem occured in "+this.getClass()+": \n"+"System shut down!");
                 active = false;
             }
         }
