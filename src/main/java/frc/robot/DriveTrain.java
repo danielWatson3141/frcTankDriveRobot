@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.analog.adis16470.frc.ADIS16470_IMU;
+
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +24,9 @@ public abstract class DriveTrain extends Subsystem {
 
     static final Double STEERING_STRENGTH = .5;
     double color = .85;
+    private ADIS16470_IMU imu;
+    private double angle;
+    
 
     public DriveTrain() {
 
@@ -30,10 +35,12 @@ public abstract class DriveTrain extends Subsystem {
     public DriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
         ledDriver = new Spark(6);
-        
+        imu = new ADIS16470_IMU(); 
     }
 
     public void operate() {
+        angle = imu.getAngle();
+        SmartDashboard.putNumber("Angle", angle);
         double leftSpeed;
         double rightSpeed;
 
@@ -53,17 +60,15 @@ public abstract class DriveTrain extends Subsystem {
     // turn at half speed
     public void turn(double theta) {
         try {
-            resetAccumulator();
+            double initialAngle = imu.getAngle();
             double leftSpeed, rightSpeed;
-            distanceTravelled(Hand.kLeft);
 
             leftSpeed = rightSpeed = Math.signum(theta) * STEERING_STRENGTH;
             setWheelSpeed(leftSpeed, rightSpeed);
 
             // .5 is because we have 2 "wheels" turning opposite directions
-            double distance = .5 * theta * wheelRadius * Math.PI / 180;
 
-            while (distanceTravelled(Hand.kLeft) < distance) {
+            while (angle < initialAngle + theta) {
                 if(controller.getBButtonPressed()){
                     return;
                 }
