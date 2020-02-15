@@ -13,6 +13,9 @@ public class lifterSystem extends Subsystem {
     public DigitalInput sensorTop;
     public DigitalInput sensorBottom;
 
+    public lifterSystem(){
+        
+    }
 
     public lifterSystem(colorSensingWheelBot theRobot) {
         super(theRobot);

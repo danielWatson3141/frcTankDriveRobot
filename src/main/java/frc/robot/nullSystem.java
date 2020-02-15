@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class nullSystem {
     public static class nullDriveTrain extends DriveTrain{
-        public nullDriveTrain(colorSensingWheelBot robot){
-            super(robot);
-        }
+        
         public void operate(){
 
         }
@@ -21,9 +19,6 @@ public class nullSystem {
     }
 
     public static class nullBallSystem extends ballSystem {
-        public nullBallSystem(colorSensingWheelBot robot){
-            super(robot);
-        }
         public void operate(){
 
         }

@@ -8,6 +8,10 @@ public abstract class Subsystem{
     public colorSensingWheelBot robot;
     public XboxController controller;
 
+    public Subsystem(){
+        boolean active = false;
+    }
+
     public Subsystem(colorSensingWheelBot theRobot){
         robot = theRobot;
         controller = robot.myController;
