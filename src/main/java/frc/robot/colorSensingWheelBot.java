@@ -51,7 +51,7 @@ public class colorSensingWheelBot extends TimedRobot {
 
         myController = new XboxController(0);
         try {
-            driver = new treadBotDriveTrain(this); // set drive train type here. competition = wheelBotDriveTrain()
+            driver = new wheelBotDriveTrain(this); // set drive train type here. competition = wheelBotDriveTrain()
         } catch (Exception e) {
             
             e.printStackTrace();

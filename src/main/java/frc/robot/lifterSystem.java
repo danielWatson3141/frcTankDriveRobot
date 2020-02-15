@@ -14,7 +14,7 @@ public class lifterSystem extends Subsystem {
     public DigitalInput sensorBottom;
 
     public lifterSystem(){
-        
+
     }
 
     public lifterSystem(colorSensingWheelBot theRobot) {
@@ -44,7 +44,7 @@ public class lifterSystem extends Subsystem {
 
     public void extend() {
         if (sensorTop.get()) {
-            extTalon.set(ControlMode.PercentOutput, .2);
+            extTalon.set(ControlMode.PercentOutput, 0);
         } else {
             extTalon.set(ControlMode.PercentOutput, .2);
         }
@@ -53,7 +53,7 @@ public class lifterSystem extends Subsystem {
     public void retract() {
         ropeTalon.set(ControlMode.PercentOutput,controller.getRawAxis(5));
         if (sensorBottom.get()) {
-            extTalon.set(ControlMode.PercentOutput, .2);
+            extTalon.set(ControlMode.PercentOutput, 0);
         } else {
             extTalon.set(ControlMode.PercentOutput,-.2);
         }
