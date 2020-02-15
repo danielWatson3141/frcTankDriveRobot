@@ -11,6 +11,7 @@ public abstract class DriveTrain extends Subsystem {
     long previousTime = 0; // ms since Jan 1 1970
 
     private Spark ledDriver;
+    
 
 
     static final double gearRatio = 1 / 6.0; // unitless
@@ -20,6 +21,7 @@ public abstract class DriveTrain extends Subsystem {
     static final double unitsPerRadian = unitsPerRotation / (2 * Math.PI);
 
     static final Double STEERING_STRENGTH = .5;
+    double color = .85;
 
     public DriveTrain() {
 
@@ -27,7 +29,8 @@ public abstract class DriveTrain extends Subsystem {
 
     public DriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
-        ledDriver = new Spark(5);
+        ledDriver = new Spark(6);
+        
     }
 
     public void operate() {
@@ -41,7 +44,8 @@ public abstract class DriveTrain extends Subsystem {
         rightSpeed = (-xAxis + yAxis) * .5;
 
         setWheelSpeed(leftSpeed, rightSpeed);
-        setColor();
+        if(controller.getStartButtonPressed())
+            switchColor();
         accumulate();
     }
 
@@ -125,18 +129,16 @@ public abstract class DriveTrain extends Subsystem {
 
     }
 
-    public void setColor() {
-        int count = 0;
-        if (controller.getStartButtonPressed()) {
-            count++;
-            if (count == 0)
-                ledDriver.set(0.87);
-            else if (count == 1)
-                ledDriver.set(0.61);
-            else if (count > 1)
-                count = 0;
-
+    public void switchColor() {
+        if(color == .85){
+            color = .61;
         }
+        else{
+            color = .85;
+        }
+        ledDriver.set(color);
+        System.out.println("Setting Color!");
+        SmartDashboard.putNumber("blinkin Color", color);
     }
 
     public abstract void setWheelSpeed(double leftSpeed, double rightSpeed);

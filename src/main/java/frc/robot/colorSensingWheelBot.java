@@ -309,9 +309,9 @@ public class colorSensingWheelBot extends TimedRobot {
         else
             lifter.ropeTalon.set(ControlMode.PercentOutput, 0);
         if (myController.getBumper(Hand.kLeft))
-            spinner.spinnerMotor.setSpeed(.2);
+            spinner.spinnerMotor.set(ControlMode.PercentOutput, .2);
         else
-            spinner.spinnerMotor.setSpeed(0);
+            spinner.spinnerMotor.set(ControlMode.PercentOutput, 0);
         if (myController.getBumper(Hand.kRight))
             // moves 1 m
             driver.move(1);
