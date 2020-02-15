@@ -58,7 +58,7 @@ public class colorSensingWheelBot extends TimedRobot {
             System.out.println("Problem occured in " + this.getClass() + ": \n"
                     + "driver failed to activate!");
             System.out.println("driver failed to activate.");
-            driver = new nullSystem.nullDriveTrain(this);
+            driver = new nullSystem.nullDriveTrain();
         }
         try {
             spinner = new spinnerSystem(this);
@@ -67,7 +67,7 @@ public class colorSensingWheelBot extends TimedRobot {
             System.out.println("Problem occured in " + this.getClass() + ": \n"
                     + "Spinner failed to activate!");
             System.out.println("spinner failed to activate.");
-            spinner = new nullSystem.nullSpinnerSystem(this);
+            spinner = new nullSystem.nullSpinnerSystem();
         }
         try {
             ballDrive = new ballSystem(this);
@@ -76,7 +76,7 @@ public class colorSensingWheelBot extends TimedRobot {
             System.out.println("Problem occured in " + this.getClass() + ": \n"
                     + "ballDrive system failed to activate!");
             System.out.println("balldrive failed to activate.");
-            ballDrive = new nullSystem.nullBallSystem(this);
+            ballDrive = new nullSystem.nullBallSystem();
         }
         try {
             lifter = new lifterSystem(this);
@@ -85,7 +85,7 @@ public class colorSensingWheelBot extends TimedRobot {
             System.out.println("Problem occured in " + this.getClass() + ": \n"
                     + "Lifter system failed to activate!");
             System.out.println("lifter failed to activate.");
-            lifter = new nullSystem.nullLifterSystem(this);
+            lifter = new nullSystem.nullLifterSystem();
         }
         try {
             vision = new visionSystem(this);
@@ -94,7 +94,7 @@ public class colorSensingWheelBot extends TimedRobot {
             System.out.println("Problem occured in " + this.getClass() + ": \n" 
                     + "Vision failed to activate!");
             System.out.println("vision failed to activate.");
-            vision = new nullSystem.nullVisionSystem(this);
+            vision = new nullSystem.nullVisionSystem();
         }
         systems = new Subsystem[] { driver, spinner, ballDrive, lifter, vision };
         spinner.activate();

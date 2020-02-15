@@ -12,6 +12,8 @@ public class ballSystem extends Subsystem {
     public Servo ballServo;
     public static final double servoOffsetAngle = 0;
 
+    public ballSystem(){}
+
     public ballSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
 

@@ -25,27 +25,18 @@ public class nullSystem {
     }
 
     public static class nullVisionSystem extends visionSystem {
-        public nullVisionSystem(colorSensingWheelBot robot){
-            super(robot);
-        }
         public void operate(){
             
         }
     }
 
     public static class nullLifterSystem extends lifterSystem {
-        public nullLifterSystem (colorSensingWheelBot robot){
-            super(robot);
-        }
         public void operate(){
             
         }
     }
 
     public static class nullSpinnerSystem extends spinnerSystem {
-        public nullSpinnerSystem(colorSensingWheelBot robot){
-            super(robot);
-        }
         public void operate(){
             
         }

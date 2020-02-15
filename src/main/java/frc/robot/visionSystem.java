@@ -33,6 +33,8 @@ public class visionSystem extends Subsystem {
     private static final double HEIGHT_OF_TARGET = .254;
     private static final double RATIO_OF_DEGREES = 20;
 
+    public visionSystem(){}
+
     public visionSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
         table = NetworkTableInstance.getDefault().getTable("limelight");

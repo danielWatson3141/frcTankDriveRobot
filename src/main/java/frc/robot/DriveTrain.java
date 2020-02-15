@@ -16,6 +16,10 @@ public abstract class DriveTrain extends Subsystem {
 
     static final Double STEERING_STRENGTH = .5;
 
+    public DriveTrain(){
+        
+    }
+
     public DriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
     }

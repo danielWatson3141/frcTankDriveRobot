@@ -19,7 +19,7 @@ public class spinnerSystem extends Subsystem {
      * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter.
      * The device will be automatically initialized with default parameters.
      */
-    public final ColorSensorV3 m_colorSensor;
+    public ColorSensorV3 m_colorSensor;
 
     // The color currently detected by the sensor
     Color detectedColor;
@@ -35,7 +35,7 @@ public class spinnerSystem extends Subsystem {
     public int sectorCount = 0;
 
     // This stores the color we saw most recently not counting backtracks
-    public int currentColor;
+    public int currentColor = 0;
 
     // short forms for color strings
     public final String red = "RED";
@@ -50,10 +50,12 @@ public class spinnerSystem extends Subsystem {
     public int targetColor = 0;
 
     // The color detected by the sensor
-    int dColor;
+    int dColor = 0;
 
     // This is the motor for spinning the spinner wheel
     public PWM spinnerMotor;
+
+    public spinnerSystem(){}
 
     public spinnerSystem(colorSensingWheelBot theRobot) {
         super(theRobot);
