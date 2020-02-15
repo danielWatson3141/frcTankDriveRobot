@@ -16,10 +16,9 @@ public class wheelBotDriveTrain extends DriveTrain {
     private TalonSRX r1Talon;
     private TalonSRX l2Talon;
     private TalonSRX r2Talon;
-    private Spark ledDriver;
-
     
-    public wheelBotDriveTrain(colorSensingWheelBot theRobot){
+
+    public wheelBotDriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
         l1Talon = new TalonSRX(1);
         l2Talon = new TalonSRX(2);
@@ -41,36 +40,20 @@ public class wheelBotDriveTrain extends DriveTrain {
         r2Talon.set(ControlMode.PercentOutput, rightSpeed);
     }
 
-    //radians / sec
+    // radians / sec
     @Override
-    protected double rotationRate(Hand side){
+    protected double rotationRate(Hand side) {
 
         double unitsPers;
-        if( side == Hand.kLeft){
-            unitsPers =  l2Talon.getSelectedSensorVelocity(0)*10;
-        }else{
-            unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
+        if (side == Hand.kLeft) {
+            unitsPers = l2Talon.getSelectedSensorVelocity(0) * 10;
+        } else {
+            unitsPers = r1Talon.getSelectedSensorVelocity(0) * 10;
         }
 
-        //SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
+        // SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
 
         return unitsPers / unitsPerRadian;
     }
-    public void setColor()
-    {
-        int count = 0;
-        ledDriver = new Spark(5);
-        if (controller.getStartButtonPressed()) {
-            count++;
-        if (count == 0)
-            ledDriver.set(0.87);
-        else if (count == 1)
-            ledDriver.set(0.61);
-        else if (count > 1) 
-            count = 0;
-            
-        }
-    }
-        
-    
+
 }

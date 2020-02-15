@@ -35,15 +35,16 @@ public class treadBotDriveTrain extends DriveTrain {
     @Override
     protected double rotationRate(Hand side){
 
-        double unitsPers;
-        if( side == Hand.kLeft){
-            unitsPers =  l1Talon.getSelectedSensorVelocity(0)*10;
-        }else{
-            unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
-        }
+        // double unitsPers;
+        // if( side == Hand.kLeft){
+        //     unitsPers =  l1Talon.getSelectedSensorVelocity(0)*10;
+        // }else{
+        //     unitsPers =  r1Talon.getSelectedSensorVelocity(0)*10;
+        // }
 
-        SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
+        // SmartDashboard.putNumber("RotationRate", unitsPers/unitsPerRadian);
 
-        return unitsPers / unitsPerRadian;
+        // return unitsPers / unitsPerRadian;
+        return 0;
     }
 }

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class DriveTrain extends Subsystem {
@@ -8,6 +9,10 @@ public abstract class DriveTrain extends Subsystem {
     double laccumulator = 0;
     double raccumulator = 0;
     long previousTime = 0; // ms since Jan 1 1970
+
+    private Spark ledDriver;
+
+
     static final double gearRatio = 1 / 6.0; // unitless
     static final double wheelRadius = .15; // meters
 
@@ -16,27 +21,27 @@ public abstract class DriveTrain extends Subsystem {
 
     static final Double STEERING_STRENGTH = .5;
 
-    public DriveTrain(){
-        
+    public DriveTrain() {
+
     }
 
     public DriveTrain(colorSensingWheelBot theRobot) {
         super(theRobot);
+        ledDriver = new Spark(5);
     }
 
     public void operate() {
         double leftSpeed;
         double rightSpeed;
 
-        double xAxis = controller.getRawAxis(1) * STEERING_STRENGTH; //dampen the x axis to improve handling
+        double xAxis = controller.getRawAxis(1) * STEERING_STRENGTH; // dampen the x axis to improve handling
         double yAxis = controller.getRawAxis(0);
-        
-        
-        leftSpeed = ( xAxis + yAxis) * .5;
+
+        leftSpeed = (xAxis + yAxis) * .5;
         rightSpeed = (-xAxis + yAxis) * .5;
 
         setWheelSpeed(leftSpeed, rightSpeed);
-
+        setColor();
         accumulate();
     }
 
@@ -62,7 +67,7 @@ public abstract class DriveTrain extends Subsystem {
             e.printStackTrace();
             System.out.println("Problem turning! ");
         } finally {
-            setWheelSpeed(0, 0); //this always executes
+            setWheelSpeed(0, 0); // this always executes
         }
     }
 
@@ -84,7 +89,7 @@ public abstract class DriveTrain extends Subsystem {
             e.printStackTrace();
             System.out.println("Problem turning! ");
         } finally {
-            setWheelSpeed(0, 0); //this always executes
+            setWheelSpeed(0, 0); // this always executes
         }
     }
 
@@ -118,6 +123,20 @@ public abstract class DriveTrain extends Subsystem {
         SmartDashboard.putNumber("Accumulator", laccumulator);
         SmartDashboard.putNumber("Rotation Rate", rotationRate(Hand.kLeft));
 
+    }
+
+    public void setColor() {
+        int count = 0;
+        if (controller.getStartButtonPressed()) {
+            count++;
+            if (count == 0)
+                ledDriver.set(0.87);
+            else if (count == 1)
+                ledDriver.set(0.61);
+            else if (count > 1)
+                count = 0;
+
+        }
     }
 
     public abstract void setWheelSpeed(double leftSpeed, double rightSpeed);
