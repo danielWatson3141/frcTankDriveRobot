@@ -51,12 +51,14 @@ public class colorSensingWheelBot extends TimedRobot {
 
         myController = new XboxController(0);
         try {
-            driver = new wheelBotDriveTrain(this);
+            driver = new treadBotDriveTrain(this); // set drive train type here. competition = wheelBotDriveTrain()
         } catch (Exception e) {
+            
             e.printStackTrace();
             System.out.println("Problem occured in " + this.getClass() + ": \n" + e.getStackTrace().toString() + "\n"
                     + "driver failed to activate!");
             System.out.println("driver failed to activate.");
+            driver = new nullSystem(robot);
         }
         try {
             spinner = new spinnerSystem(this);
