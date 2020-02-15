@@ -21,8 +21,6 @@ public class colorSensingWheelBot extends TimedRobot {
     public final int spin = 1;
     public final int spinT = 2;
     public final int balls = 3;
-    public final int extend = 4;
-    public final int retract = 5;
 
     public final String[] states = { "DRIVE", "SPIN", "SPINT", "BALLS", "EXTEND", "RETRACT", "FAR", "MIDDLE", "NEAR" };
 
@@ -161,17 +159,15 @@ public class colorSensingWheelBot extends TimedRobot {
         case drive:
 
             if (myController.getYButtonPressed()) {
-                changeState(spin);
-                break;
-            } else if (myController.getBumperPressed(Hand.kLeft)) {
-                changeState(spinT);
-                break;
-            } else if (myController.getXButtonPressed()) {
+                if(myController.getBumper(Hand.kLeft)){
+                    changeState(spinT);
+                } else {
+                    changeState(spin);    
+                }
+            } 
+            else if (myController.getXButtonPressed()) {
                 changeState(balls);
-                break;
-            } else if (myController.getStickButtonPressed(Hand.kRight)) {
-                changeState(extend);
-                break;
+                
             }
 
             break;
@@ -188,18 +184,6 @@ public class colorSensingWheelBot extends TimedRobot {
             if (spinner.targetColor == spinner.currentColor) {
                 changeState(drive);
             }
-            break;
-
-        case extend:
-            lifter.extend();
-            if (myController.getStickButtonPressed(Hand.kRight)) {
-                changeState(retract);
-            }
-
-            break;
-
-        case retract:
-            lifter.retract();
             break;
         }
     }

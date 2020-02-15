@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class lifterSystem extends Subsystem {
 
@@ -34,12 +35,19 @@ public class lifterSystem extends Subsystem {
 
     @Override
     public void operate() {
-        if(robot.state == 4){
-            extend();
+        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
+        double speedRequest = (rightTrigger-leftTrigger)*.5;
+
+        if(sensorTop.get()){
+            speedRequest = Math.min(speedRequest, 0);
         }
-        if(robot.state == 5){
-            retract();
+
+        if(sensorBottom.get()){
+            speedRequest = Math.max(speedRequest, 0);
         }
+
+        extTalon.set(ControlMode.PercentOutput, speedRequest);
     }
 
     public void extend() {

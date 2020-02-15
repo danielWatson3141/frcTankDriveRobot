@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class ballSystem extends Subsystem {
 
@@ -22,14 +23,19 @@ public class ballSystem extends Subsystem {
 
         // servo for the ball dumper
         ballServo = new Servo(2);
+
+        closeGate();
     }
 
     @Override
     public void operate() {
         // makes the ball collect motor run
-        if (controller.getAButton()) {
+        if (controller.getBumper(Hand.kRight)) {
             belt.set(ControlMode.PercentOutput, .6);
-        } else {
+        } else if (controller.getBumper(Hand.kLeft)){
+            belt.set(ControlMode.PercentOutput, -.6);
+        }
+        else if (robot.state != 3){
             belt.set(ControlMode.PercentOutput, 0);
         }
     }

@@ -101,10 +101,16 @@ public class spinnerSystem extends Subsystem {
         SmartDashboard.putString("Target Color", colors[targetColor]);
 
         // this allows the driver to switch the target color
-        if (controller.getBumperPressed(Hand.kRight)) {
+        
+        if (controller.getPOV() == 90) {
             targetColor += 1;
             if (targetColor > 3) {
                 targetColor = 0;
+            }
+        } else if (controller.getPOV() == 270){
+            targetColor -= 1;
+            if (targetColor < 0){
+                targetColor = 3;
             }
         }
 
