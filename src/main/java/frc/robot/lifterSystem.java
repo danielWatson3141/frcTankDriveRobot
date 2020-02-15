@@ -46,16 +46,16 @@ public class lifterSystem extends Subsystem {
         if (sensorTop.get()) {
             extTalon.set(ControlMode.PercentOutput, 0);
         } else {
-            extTalon.set(ControlMode.PercentOutput, .2);
+            extTalon.set(ControlMode.PercentOutput, .5);
         }
     }
 
     public void retract() {
         ropeTalon.set(ControlMode.PercentOutput,controller.getRawAxis(5));
-        if (sensorBottom.get()) {
+        if (!sensorBottom.get()) {
             extTalon.set(ControlMode.PercentOutput, 0);
         } else {
-            extTalon.set(ControlMode.PercentOutput,-.2);
+            extTalon.set(ControlMode.PercentOutput,-.5);
         }
 
     }

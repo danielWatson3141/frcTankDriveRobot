@@ -10,7 +10,7 @@ public class ballSystem extends Subsystem {
     // This is the motor for the belt and the servo motor for the ball mechanism
     public TalonSRX belt;
     public Servo ballServo;
-    public static final double servoOffsetAngle = 0;
+    public static final double servoOffsetAngle = 50;
 
     public ballSystem(){}
 
@@ -28,7 +28,7 @@ public class ballSystem extends Subsystem {
     public void operate() {
         // makes the ball collect motor run
         if (controller.getAButton()) {
-            belt.set(ControlMode.PercentOutput, 1);
+            belt.set(ControlMode.PercentOutput, .6);
         } else {
             belt.set(ControlMode.PercentOutput, 0);
         }
@@ -36,13 +36,13 @@ public class ballSystem extends Subsystem {
 
     public void openGate() {
         // opens the gate to release the balls
-        ballServo.set(95 + servoOffsetAngle);
-        belt.set(ControlMode.PercentOutput, 1);
+        ballServo.set(.55);
+        belt.set(ControlMode.PercentOutput, .6);
     }
 
     public void closeGate() {
         // closes the gate
-        ballServo.set(0 + servoOffsetAngle);
-        belt.set(ControlMode.PercentOutput, 1);
+        ballServo.set(.94);
+        belt.set(ControlMode.PercentOutput, 0);
     }
 }

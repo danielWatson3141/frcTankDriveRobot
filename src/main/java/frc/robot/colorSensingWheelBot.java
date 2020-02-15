@@ -53,10 +53,9 @@ public class colorSensingWheelBot extends TimedRobot {
         try {
             driver = new wheelBotDriveTrain(this); // set drive train type here. competition = wheelBotDriveTrain()
         } catch (Exception e) {
-            
+
             e.printStackTrace();
-            System.out.println("Problem occured in " + this.getClass() + ": \n"
-                    + "driver failed to activate!");
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + "driver failed to activate!");
             System.out.println("driver failed to activate.");
             driver = new nullSystem.nullDriveTrain();
         }
@@ -64,8 +63,7 @@ public class colorSensingWheelBot extends TimedRobot {
             spinner = new spinnerSystem(this);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Problem occured in " + this.getClass() + ": \n"
-                    + "Spinner failed to activate!");
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + "Spinner failed to activate!");
             System.out.println("spinner failed to activate.");
             spinner = new nullSystem.nullSpinnerSystem();
         }
@@ -73,8 +71,8 @@ public class colorSensingWheelBot extends TimedRobot {
             ballDrive = new ballSystem(this);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Problem occured in " + this.getClass() + ": \n"
-                    + "ballDrive system failed to activate!");
+            System.out
+                    .println("Problem occured in " + this.getClass() + ": \n" + "ballDrive system failed to activate!");
             System.out.println("balldrive failed to activate.");
             ballDrive = new nullSystem.nullBallSystem();
         }
@@ -82,8 +80,7 @@ public class colorSensingWheelBot extends TimedRobot {
             lifter = new lifterSystem(this);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Problem occured in " + this.getClass() + ": \n"
-                    + "Lifter system failed to activate!");
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + "Lifter system failed to activate!");
             System.out.println("lifter failed to activate.");
             lifter = new nullSystem.nullLifterSystem();
         }
@@ -91,8 +88,7 @@ public class colorSensingWheelBot extends TimedRobot {
             vision = new visionSystem(this);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Problem occured in " + this.getClass() + ": \n" 
-                    + "Vision failed to activate!");
+            System.out.println("Problem occured in " + this.getClass() + ": \n" + "Vision failed to activate!");
             System.out.println("vision failed to activate.");
             vision = new nullSystem.nullVisionSystem();
         }
@@ -283,6 +279,8 @@ public class colorSensingWheelBot extends TimedRobot {
         }
     }
 
+    double servoAngle = .5;
+
     // tester code
     @Override
     public void testPeriodic() {
@@ -297,13 +295,14 @@ public class colorSensingWheelBot extends TimedRobot {
         else
             ballDrive.belt.set(ControlMode.PercentOutput, 0);
         if (myController.getBButton())
-            ballDrive.ballServo.set(95);
+            ballDrive.openGate();
         else
-            ballDrive.ballServo.set(0);
+            ballDrive.closeGate();
+
         if (myController.getXButton())
-            lifter.extTalon.set(ControlMode.PercentOutput, .2);
+            lifter.extend();
         else
-            lifter.extTalon.set(ControlMode.PercentOutput, 0);
+            lifter.retract();
         if (myController.getYButton())
             lifter.ropeTalon.set(ControlMode.PercentOutput, -.2);
         else
