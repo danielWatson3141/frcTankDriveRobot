@@ -152,6 +152,21 @@ public class colorSensingWheelBot extends TimedRobot {
             changeState(drive);
         }
 
+        switch(myController.getPOV(0)){
+            case 0:
+                driver.move(1);
+                break;
+            case 90:
+                driver.turn(90);
+                break;
+            case 180:
+                deposit();
+                break;
+            case 270:
+                driver.turn(-90);
+                break;
+        }
+
         // This section controls state behavior. It defines state transitions and
         // initializations
         switch (state) {
@@ -159,15 +174,13 @@ public class colorSensingWheelBot extends TimedRobot {
         case drive:
 
             if (myController.getYButtonPressed()) {
-                if(myController.getBumper(Hand.kLeft)){
+                if (myController.getBumper(Hand.kLeft)) {
                     changeState(spinT);
                 } else {
-                    changeState(spin);    
+                    changeState(spin);
                 }
-            } 
-            else if (myController.getXButtonPressed()) {
+            } else if (myController.getAButtonPressed()) {
                 changeState(balls);
-                
             }
 
             break;
@@ -287,6 +300,7 @@ public class colorSensingWheelBot extends TimedRobot {
             lifter.extend();
         else
             lifter.retract();
+
         if (myController.getYButton())
             lifter.ropeTalon.set(ControlMode.PercentOutput, -.2);
         else
