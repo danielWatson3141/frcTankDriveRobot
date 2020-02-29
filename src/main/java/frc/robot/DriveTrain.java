@@ -3,6 +3,7 @@ package frc.robot;
 import com.analog.adis16470.frc.ADIS16470_IMU;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,6 +14,7 @@ public abstract class DriveTrain extends Subsystem {
     long previousTime = 0; // ms since Jan 1 1970
 
     private Spark ledDriver;
+    AnalogInput mic;
     
 
 
@@ -36,11 +38,21 @@ public abstract class DriveTrain extends Subsystem {
         super(theRobot);
         ledDriver = new Spark(6);
         imu = new ADIS16470_IMU(); 
+        mic = new AnalogInput(0);
+        mic.setOversampleBits(4);
+        mic.setAverageBits(4);
+        
     }
 
     public void operate() {
         angle = imu.getAngle();
         SmartDashboard.putNumber("Angle", angle);
+
+        double soundVolume = mic.getAverageValue();
+        SmartDashboard.putNumber("Mic value", soundVolume);
+
+        ledDriver.set(soundVolume);
+
         double leftSpeed;
         double rightSpeed;
 
@@ -51,8 +63,6 @@ public abstract class DriveTrain extends Subsystem {
         rightSpeed = (-xAxis + yAxis) * .5;
 
         setWheelSpeed(leftSpeed, rightSpeed);
-        if(controller.getStartButtonPressed())
-            switchColor();
         accumulate();
     }
 
@@ -149,7 +159,6 @@ public abstract class DriveTrain extends Subsystem {
         raccumulator += dt * rotationRate(Hand.kRight) * wheelRadius * gearRatio;
         SmartDashboard.putNumber("Accumulator", laccumulator);
         SmartDashboard.putNumber("Rotation Rate", rotationRate(Hand.kLeft));
-
     }
 
     public void switchColor() {
