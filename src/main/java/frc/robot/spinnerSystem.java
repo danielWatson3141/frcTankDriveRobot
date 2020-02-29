@@ -98,7 +98,7 @@ public class spinnerSystem extends Subsystem {
         SmartDashboard.putNumber("Green", detectedColor.green);
         SmartDashboard.putNumber("Blue", detectedColor.blue);
         SmartDashboard.putString("Color Sensed", ColorToString(detectedColor));
-        SmartDashboard.putString("Target Color", colors[targetColor]);
+        SmartDashboard.putString("Target Color", colors[(targetColor+2)%4]);
 
         // this allows the driver to switch the target color
         
@@ -107,6 +107,7 @@ public class spinnerSystem extends Subsystem {
             if (targetColor > 3) {
                 targetColor = 0;
             }
+            
         } else if (controller.getPOV() == 270){
             targetColor -= 1;
             if (targetColor < 0){
@@ -127,7 +128,7 @@ public class spinnerSystem extends Subsystem {
     public void spin() {
         //System.out.println("spinning");
         //spinnerMotor.set(ControlMode.PercentOutput, .2);
-        spinnerMotor.set(ControlMode.PercentOutput, .20);
+        spinnerMotor.set(ControlMode.PercentOutput, .2);
         if (dColor == (currentColor + 1) % 4) {
             sectorCount++;
             SmartDashboard.putNumber("sectorCount", sectorCount);
@@ -139,7 +140,7 @@ public class spinnerSystem extends Subsystem {
     public void spinT() {
         //System.out.println("spinning");
        // spinnerMotor.set(ControlMode.PercentOutput, .15);
-        spinnerMotor.set(ControlMode.PercentOutput, .1);
+        spinnerMotor.set(ControlMode.PercentOutput, .15);
         if (dColor == (currentColor + 1) % 4) {
             SmartDashboard.putString("currentColor", colors[currentColor]);
             currentColor++;

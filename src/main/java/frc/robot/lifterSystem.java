@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class lifterSystem extends Subsystem {
 
@@ -37,17 +38,24 @@ public class lifterSystem extends Subsystem {
     public void operate() {
         double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
         double rightTrigger = controller.getTriggerAxis(Hand.kRight);
-        double speedRequest = (rightTrigger-leftTrigger)*.5;
+        double speedRequest = (rightTrigger-leftTrigger)*.2;
 
+        // if(speedRequest < 0){
+        //     speedRequest*=.5;
+        // }
+
+        SmartDashboard.putBoolean("sensorTop", sensorTop.get());
+        SmartDashboard.putBoolean("sensorBottom", sensorBottom.get());
         if(sensorTop.get()){
             speedRequest = Math.min(speedRequest, 0);
         }
 
-        if(sensorBottom.get()){
+        if(!sensorBottom.get()){
             speedRequest = Math.max(speedRequest, 0);
         }
 
         extTalon.set(ControlMode.PercentOutput, speedRequest);
+        retract();
     }
 
     public void extend() {
@@ -60,11 +68,5 @@ public class lifterSystem extends Subsystem {
 
     public void retract() {
         ropeTalon.set(ControlMode.PercentOutput,controller.getRawAxis(5));
-        if (!sensorBottom.get()) {
-            extTalon.set(ControlMode.PercentOutput, 0);
-        } else {
-            extTalon.set(ControlMode.PercentOutput,-.5);
-        }
-
     }
 }

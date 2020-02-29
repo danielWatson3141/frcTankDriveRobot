@@ -38,9 +38,9 @@ public abstract class DriveTrain extends Subsystem {
         super(theRobot);
         ledDriver = new Spark(6);
         imu = new ADIS16470_IMU(); 
-        mic = new AnalogInput(0);
-        mic.setOversampleBits(4);
-        mic.setAverageBits(4);
+        mic = new AnalogInput(4);
+        //mic.setOversampleBits(4);
+        //mic.setAverageBits(4);
         
     }
 
@@ -50,6 +50,9 @@ public abstract class DriveTrain extends Subsystem {
 
         double soundVolume = mic.getAverageValue();
         SmartDashboard.putNumber("Mic value", soundVolume);
+
+        double rawMicValue = mic.getValue();
+        SmartDashboard.putNumber("Raw mic", rawMicValue);
 
         ledDriver.set(soundVolume);
 

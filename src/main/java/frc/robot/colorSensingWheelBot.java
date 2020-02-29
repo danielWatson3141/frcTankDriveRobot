@@ -152,20 +152,20 @@ public class colorSensingWheelBot extends TimedRobot {
             changeState(drive);
         }
 
-        switch(myController.getPOV(0)){
-            case 0:
-                driver.move(1);
-                break;
-            case 90:
-                driver.turn(90);
-                break;
-            case 180:
-                deposit();
-                break;
-            case 270:
-                driver.turn(-90);
-                break;
-        }
+        // switch(myController.getPOV(0)){
+        //     case 0:
+        //         driver.move(1);
+        //         break;
+        //     case 90:
+        //         driver.turn(90);
+        //         break;
+        //     case 180:
+        //         deposit();
+        //         break;
+        //     case 270:
+        //         driver.turn(-90);
+        //         break;
+        // }
 
         // This section controls state behavior. It defines state transitions and
         // initializations
